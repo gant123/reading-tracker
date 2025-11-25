@@ -1,0 +1,162 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PARENT
+  CHILD
+}
+
+enum BookStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RewardStatus {
+  AVAILABLE
+  REDEEMED
+  COMPLETED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  role          Role
+  avatarColor   String    @default("#3B82F6")
+  parentId      String?
+  parent        User?     @relation("ParentChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children      User[]    @relation("ParentChildren")
+  
+  books         Book[]
+  sessions      ReadingSession[]
+  points        Int       @default(0)
+  totalMinutes  Int       @default(0)
+  streakDays    Int       @default(0)
+  lastReadDate  DateTime?
+  
+  achievements  UserAchievement[]
+  rewards       UserReward[]
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([parentId])
+}
+
+model Book {
+  id              String      @id @default(cuid())
+  title           String
+  author          String
+  coverUrl        String?
+  googleBooksId   String?
+  pageCount       Int?
+  description     String?
+  status          BookStatus  @default(PENDING)
+  
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  sessions        ReadingSession[]
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model ReadingSession {
+  id              String    @id @default(cuid())
+  startTime       DateTime
+  endTime         DateTime
+  durationMinutes Int
+  notes           String?
+  verified        Boolean   @default(false)
+  
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  bookId          String
+  book            Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  
+  pointsEarned    Int
+  
+  createdAt       DateTime  @default(now())
+  
+  @@index([userId])
+  @@index([bookId])
+  @@index([startTime])
+}
+
+model Achievement {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String
+  icon        String
+  requirement Int
+  type        String
+  
+  users       UserAchievement[]
+  
+  createdAt   DateTime  @default(now())
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  
+  earnedAt      DateTime    @default(now())
+  
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model Reward {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  pointsCost  Int
+  icon        String
+  
+  parentId    String
+  
+  users       UserReward[]
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([parentId])
+}
+
+model UserReward {
+  id          String        @id @default(cuid())
+  status      RewardStatus  @default(AVAILABLE)
+  
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  rewardId    String
+  reward      Reward        @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  
+  redeemedAt  DateTime?
+  completedAt DateTime?
+  
+  createdAt   DateTime      @default(now())
+  
+  @@index([userId])
+  @@index([status])
+}
