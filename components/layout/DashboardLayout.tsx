@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { Sidebar } from '@/components/layout/sidebar';
-import { Navbar } from '@/components/layout/navbar'; // Import the Navbar
+import { Navbar } from '@/components/layout/navbar';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -24,10 +24,8 @@ export function DashboardLayout({
   avatarColor,
 }: DashboardLayoutProps) {
   return (
-    // Removed the 'bg-gradient-to-b' class so your global background shows through!
     <div className="min-h-screen"> 
-      
-      {/* Use the shared Navbar component */}
+      {/* Navbar */}
       <Navbar 
         userName={userName}
         userEmail={userEmail}
@@ -41,7 +39,8 @@ export function DashboardLayout({
       <div className="flex">
         <Sidebar role={role} />
 
-        <main className="flex-1 overflow-x-hidden p-6">
+        {/* Main content area - adds bottom padding on mobile for the bottom nav */}
+        <main className="flex-1 overflow-x-hidden p-4 sm:p-6 pb-20 lg:pb-6">
           {children}
         </main>
       </div>
