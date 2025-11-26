@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { BookOpen } from 'lucide-react';
-
+import Image from 'next/image';
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -28,7 +27,15 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Invalid email or password');
       } else {
-        router.push('/dashboard');
+        const session = await getSession();
+        if (session?.user?.role === 'PARENT') {
+          router.push('/parent'); 
+        } else if (session?.user?.role === 'CHILD') {
+          router.push('/child');  
+        } else {
+          // Fallback if something is wrong
+          router.push('/'); 
+        }
         router.refresh();
       }
     } catch (error) {
@@ -41,9 +48,18 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <BookOpen className="w-16 h-16 text-blue-600" />
+      <div className="text-center mb-8">
+          <div className="flex justify-center mb-6">
+            {/* Replaced BookOpen icon with your logo */}
+            <div className="relative w-24 h-24">
+               <Image 
+                 src="/logo.png" 
+                 alt="Logo" 
+                 fill
+                 className="object-contain"
+                 priority
+               />
+            </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
           <p className="text-gray-600">Sign in to continue your reading journey</p>

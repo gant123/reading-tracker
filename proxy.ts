@@ -9,7 +9,6 @@ export default auth((req) => {
   const { nextUrl } = req;
   
   const isDashboardRoute = 
-    nextUrl.pathname.startsWith('/dashboard') || 
     nextUrl.pathname.startsWith('/child') || 
     nextUrl.pathname.startsWith('/parent');
   

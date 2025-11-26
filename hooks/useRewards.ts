@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Reward {
   id: string;
@@ -26,170 +26,119 @@ interface UserReward {
 }
 
 export function useRewards() {
-  const [rewards, setRewards] = useState<Reward[]>([]);
-  const [redeemedRewards, setRedeemedRewards] = useState<UserReward[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchRewards = async () => {
-    setLoading(true);
-    setError(null);
+  // 1. FETCH REWARDS (Polling)
+  const { 
+    data: rewards = [], 
+    isLoading: loadingRewards, 
+    error: rewardsError 
+  } = useQuery({
+    queryKey: ['rewards'],
+    queryFn: async () => {
+      const res = await fetch('/api/rewards');
+      if (!res.ok) throw new Error('Failed to fetch rewards');
+      return res.json() as Promise<Reward[]>;
+    },
+    refetchInterval: 2000, // Poll every 2s
+  });
 
-    try {
-      const response = await fetch('/api/rewards');
+  // 2. FETCH REDEEMED (Polling)
+  const { 
+    data: redeemedRewards = [], 
+    isLoading: loadingRedeemed 
+  } = useQuery({
+    queryKey: ['redeemed-rewards'],
+    queryFn: async () => {
+      const res = await fetch('/api/rewards/redeemed');
+      if (!res.ok) throw new Error('Failed to fetch redeemed rewards');
+      return res.json() as Promise<UserReward[]>;
+    },
+    refetchInterval: 2000, // Poll every 2s
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch rewards');
-      }
-
-      const data = await response.json();
-      setRewards(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch rewards');
-      console.error('Error fetching rewards:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchRedeemedRewards = async () => {
-    try {
-      const response = await fetch('/api/rewards/redeemed');
-
-      if (response.ok) {
-        const data = await response.json();
-        setRedeemedRewards(data);
-      }
-    } catch (err: any) {
-      console.error('Error fetching redeemed rewards:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchRewards();
-    fetchRedeemedRewards();
-  }, []);
-
-  const createReward = async (rewardData: {
-    title: string;
-    description: string;
-    pointsCost: number;
-    icon: string;
-  }) => {
-    try {
-      const response = await fetch('/api/rewards', {
+  // 3. CREATE REWARD
+  const createReward = useMutation({
+    mutationFn: async (rewardData: { title: string; description: string; pointsCost: number; icon: string }) => {
+      const res = await fetch('/api/rewards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(rewardData),
       });
+      if (!res.ok) throw new Error('Failed to create reward');
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rewards'] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to create reward');
-      }
-
-      const newReward = await response.json();
-      setRewards((prev) => [newReward, ...prev]);
-      return newReward;
-    } catch (err: any) {
-      setError(err.message || 'Failed to create reward');
-      throw err;
-    }
-  };
-
-  const redeemReward = async (rewardId: string) => {
-    try {
-      const response = await fetch(`/api/rewards/${rewardId}/redeem`, {
+  // 4. REDEEM REWARD
+  const redeemReward = useMutation({
+    mutationFn: async (rewardId: string) => {
+      const res = await fetch(`/api/rewards/${rewardId}/redeem`, {
         method: 'POST',
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to redeem reward');
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to redeem reward');
       }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rewards'] });
+      queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
+      // Also refresh points (avatar) if you have a hook for that
+      queryClient.invalidateQueries({ queryKey: ['user-points'] }); 
+    },
+  });
 
-      const userReward = await response.json();
-      setRedeemedRewards((prev) => [userReward, ...prev]);
-      
-      // Refresh rewards to update canAfford status
-      await fetchRewards();
-      
-      return userReward;
-    } catch (err: any) {
-      setError(err.message || 'Failed to redeem reward');
-      throw err;
-    }
-  };
-
-  const deleteReward = async (rewardId: string) => {
-    try {
-      const response = await fetch(`/api/rewards/${rewardId}`, {
+  // 5. DELETE REWARD
+  const deleteReward = useMutation({
+    mutationFn: async (rewardId: string) => {
+      const res = await fetch(`/api/rewards/${rewardId}`, {
         method: 'DELETE',
       });
+      if (!res.ok) throw new Error('Failed to delete reward');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rewards'] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to delete reward');
-      }
-
-      setRewards((prev) => prev.filter((reward) => reward.id !== rewardId));
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete reward');
-      throw err;
-    }
-  };
-
-  const completeReward = async (userRewardId: string) => {
-    try {
-      const response = await fetch(`/api/rewards/${userRewardId}/complete`, {
+  // 6. COMPLETE REWARD
+  const completeReward = useMutation({
+    mutationFn: async (userRewardId: string) => {
+      const res = await fetch(`/api/rewards/${userRewardId}/complete`, {
         method: 'POST',
       });
+      if (!res.ok) throw new Error('Failed to complete reward');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to complete reward');
-      }
-
-      setRedeemedRewards((prev) =>
-        prev.map((ur) =>
-          ur.id === userRewardId
-            ? { ...ur, status: 'COMPLETED' as const, completedAt: new Date() }
-            : ur
-        )
-      );
-    } catch (err: any) {
-      setError(err.message || 'Failed to complete reward');
-      throw err;
-    }
-  };
-
-  const getAvailableRewards = () => {
-    return rewards.filter((reward) => reward.canAfford !== false);
-  };
-
-  const getUnavailableRewards = () => {
-    return rewards.filter((reward) => reward.canAfford === false);
-  };
-
-  const getPendingRedemptions = () => {
-    return redeemedRewards.filter((ur) => ur.status === 'REDEEMED');
-  };
-
-  const getCompletedRedemptions = () => {
-    return redeemedRewards.filter((ur) => ur.status === 'COMPLETED');
-  };
+  // Helpers
+  const getAvailableRewards = () => rewards.filter((r) => r.canAfford !== false);
+  const getUnavailableRewards = () => rewards.filter((r) => r.canAfford === false);
+  const getPendingRedemptions = () => redeemedRewards.filter((ur) => ur.status === 'REDEEMED');
+  const getCompletedRedemptions = () => redeemedRewards.filter((ur) => ur.status === 'COMPLETED');
 
   const refresh = () => {
-    fetchRewards();
-    fetchRedeemedRewards();
+    queryClient.invalidateQueries({ queryKey: ['rewards'] });
+    queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
   };
 
   return {
     rewards,
     redeemedRewards,
-    loading,
-    error,
-    createReward,
-    redeemReward,
-    deleteReward,
-    completeReward,
+    loading: loadingRewards || loadingRedeemed,
+    error: rewardsError ? (rewardsError as Error).message : null,
+    createReward: createReward.mutateAsync,
+    redeemReward: redeemReward.mutateAsync,
+    deleteReward: deleteReward.mutateAsync,
+    completeReward: completeReward.mutateAsync,
     getAvailableRewards,
     getUnavailableRewards,
     getPendingRedemptions,

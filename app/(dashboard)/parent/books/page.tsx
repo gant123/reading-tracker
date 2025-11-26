@@ -1,54 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useBooks } from '@/hooks/useBooks'; //
 import { BookApproval } from '@/components/books/BookApproval';
 import { BookOpen } from 'lucide-react';
-import Link from 'next/link';
-
-interface Book {
-  id: string;
-  title: string;
-  author: string;
-  coverUrl?: string | null;
-  description?: string | null;
-  pageCount?: number | null;
-  user: {
-    name: string;
-    email: string;
-  };
-}
+import { useRouter } from 'next/navigation';
 
 export default function ParentBooksPage() {
-  const [pendingBooks, setPendingBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  
+  // Use the hook for real-time pending books
+  const { books: pendingBooks, loading, refresh } = useBooks('PENDING');
 
-  const fetchPendingBooks = async () => {
-    try {
-      const response = await fetch('/api/books?status=PENDING');
-      if (response.ok) {
-        const data = await response.json();
-        setPendingBooks(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch books:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPendingBooks();
-  }, []);
-
-  const handleApprove = () => {
-    fetchPendingBooks();
-    router.refresh();
-  };
-
-  const handleReject = () => {
-    fetchPendingBooks();
+  const handleActionComplete = () => {
+    // Refresh the list immediately when an action is taken
+    refresh();
     router.refresh();
   };
 
@@ -80,8 +45,8 @@ export default function ParentBooksPage() {
             <BookApproval
               key={book.id}
               book={book}
-              onApprove={handleApprove}
-              onReject={handleReject}
+              onApprove={handleActionComplete}
+              onReject={handleActionComplete}
             />
           ))}
         </div>
@@ -92,7 +57,7 @@ export default function ParentBooksPage() {
             No Pending Books
           </h3>
           <p className="text-gray-600">
-            All books have been reviewed. New requests will appear here.
+            All books have been reviewed. New requests will appear here automatically.
           </p>
         </div>
       )}

@@ -1,64 +1,38 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query'; // Import useQuery for points
 import { Gift, Star, Lock } from 'lucide-react';
 import Link from 'next/link';
+import { useRewards } from '@/hooks/useRewards'; // Use the new hook
 
 export default function ChildRewardsPage() {
-  const [rewards, setRewards] = useState<any[]>([]);
-  const [userPoints, setUserPoints] = useState(0);
-  const [loading, setLoading] = useState(true);
+  // 1. Use the hook for real-time rewards
+  const { rewards, loading: loadingRewards, redeemReward } = useRewards();
 
-  useEffect(() => {
-    fetchRewards();
-    fetchUserPoints();
-  }, []);
+  // 2. Use React Query for points so they update automatically when a reward is redeemed
+  const { data: pointData, isLoading: loadingPoints } = useQuery({
+    queryKey: ['user-points'],
+    queryFn: async () => {
+      const res = await fetch('/api/avatar/points');
+      if (!res.ok) return { points: 0 };
+      return res.json();
+    },
+    refetchInterval: 5000, // Sync points occasionally
+  });
 
-  const fetchRewards = async () => {
-    try {
-      const response = await fetch('/api/rewards');
-      const data = await response.json();
-      setRewards(data);
-    } catch (error) {
-      console.error('Failed to fetch rewards:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchUserPoints = async () => {
-    // This would typically come from a user endpoint
-    // For now, we'll get it from the rewards response or session
-    try {
-      const response = await fetch('/api/user/points');
-      if (response.ok) {
-        const data = await response.json();
-        setUserPoints(data.points);
-      }
-    } catch (error) {
-      console.error('Failed to fetch points:', error);
-    }
-  };
+  const userPoints = pointData?.points || 0;
+  const loading = loadingRewards || loadingPoints;
 
   const handleRedeem = async (rewardId: string) => {
     if (!confirm('Are you sure you want to redeem this reward?')) return;
 
     try {
-      const response = await fetch(`/api/rewards/${rewardId}/redeem`, {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        alert('Reward redeemed! Your parent will complete it for you.');
-        fetchRewards();
-        fetchUserPoints();
-      } else {
-        const error = await response.json();
-        alert(error.error || 'Failed to redeem reward');
-      }
-    } catch (error) {
+      await redeemReward(rewardId);
+      alert('Reward redeemed! Your parent will complete it for you.');
+      // No need to fetch manually; the hook invalidates the cache and updates UI instantly
+    } catch (error: any) {
       console.error('Failed to redeem reward:', error);
-      alert('Failed to redeem reward');
+      alert(error.message || 'Failed to redeem reward');
     }
   };
 
@@ -101,45 +75,49 @@ export default function ChildRewardsPage() {
             <div className="text-center py-12 text-gray-500">Loading rewards...</div>
           ) : rewards.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rewards.map((reward) => (
-                <div
-                  key={reward.id}
-                  className={`bg-white rounded-xl shadow-md overflow-hidden ${
-                    !reward.canAfford ? 'opacity-75' : ''
-                  }`}
-                >
-                  <div className="p-6">
-                    <div className="text-5xl mb-4 text-center">{reward.icon}</div>
-                    
-                    <h3 className="font-bold text-xl mb-2 text-center">{reward.title}</h3>
-                    <p className="text-gray-600 text-sm mb-4 text-center">
-                      {reward.description}
-                    </p>
+              {rewards.map((reward) => {
+                const canAfford = userPoints >= reward.pointsCost; // Recalculate based on real-time points
+                
+                return (
+                  <div
+                    key={reward.id}
+                    className={`bg-white rounded-xl shadow-md overflow-hidden ${
+                      !canAfford ? 'opacity-75' : ''
+                    }`}
+                  >
+                    <div className="p-6">
+                      <div className="text-5xl mb-4 text-center">{reward.icon}</div>
+                      
+                      <h3 className="font-bold text-xl mb-2 text-center">{reward.title}</h3>
+                      <p className="text-gray-600 text-sm mb-4 text-center">
+                        {reward.description}
+                      </p>
 
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                      <Star className="w-5 h-5 text-amber-500" />
-                      <span className="text-2xl font-bold text-gray-900">
-                        {reward.pointsCost}
-                      </span>
-                      <span className="text-gray-600">points</span>
-                    </div>
-
-                    {reward.canAfford ? (
-                      <button
-                        onClick={() => handleRedeem(reward.id)}
-                        className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
-                      >
-                        Redeem Reward
-                      </button>
-                    ) : (
-                      <div className="w-full bg-gray-200 text-gray-600 py-3 rounded-lg text-center font-semibold flex items-center justify-center gap-2">
-                        <Lock className="w-4 h-4" />
-                        Need {reward.pointsCost - userPoints} more points
+                      <div className="flex items-center justify-center gap-2 mb-4">
+                        <Star className="w-5 h-5 text-amber-500" />
+                        <span className="text-2xl font-bold text-gray-900">
+                          {reward.pointsCost}
+                        </span>
+                        <span className="text-gray-600">points</span>
                       </div>
-                    )}
+
+                      {canAfford ? (
+                        <button
+                          onClick={() => handleRedeem(reward.id)}
+                          className="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                        >
+                          Redeem Reward
+                        </button>
+                      ) : (
+                        <div className="w-full bg-gray-200 text-gray-600 py-3 rounded-lg text-center font-semibold flex items-center justify-center gap-2">
+                          <Lock className="w-4 h-4" />
+                          Need {reward.pointsCost - userPoints} more points
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="bg-white rounded-xl shadow-md p-12 text-center">

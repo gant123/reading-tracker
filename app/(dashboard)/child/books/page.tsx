@@ -1,31 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BookOpen, Plus, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useBooks } from '@/hooks/useBooks'; //
 
 export default function ChildBooksPage() {
-  const [books, setBooks] = useState<any[]>([]);
+  // Use the hook for real-time book list and adding functionality
+  const { books, loading, addBook, searchBooks } = useBooks();
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
-
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
-  const fetchBooks = async () => {
-    try {
-      const response = await fetch('/api/books');
-      const data = await response.json();
-      setBooks(data);
-    } catch (error) {
-      console.error('Failed to fetch books:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,8 +19,7 @@ export default function ChildBooksPage() {
 
     setSearching(true);
     try {
-      const response = await fetch(`/api/books/search?q=${encodeURIComponent(searchQuery)}`);
-      const data = await response.json();
+      const data = await searchBooks(searchQuery);
       setSearchResults(data);
     } catch (error) {
       console.error('Search failed:', error);
@@ -45,18 +30,10 @@ export default function ChildBooksPage() {
 
   const handleAddBook = async (book: any) => {
     try {
-      const response = await fetch('/api/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(book),
-      });
-
-      if (response.ok) {
-        alert('Book added! Waiting for parent approval.');
-        setSearchResults([]);
-        setSearchQuery('');
-        fetchBooks();
-      }
+      await addBook(book);
+      alert('Book added! Waiting for parent approval.');
+      setSearchResults([]);
+      setSearchQuery('');
     } catch (error) {
       console.error('Failed to add book:', error);
       alert('Failed to add book');

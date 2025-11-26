@@ -1,34 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTimer } from '../../../../hooks/useTimer';
+import { useTimer } from '@/hooks/useTimer'; //
+import { useBooks } from '@/hooks/useBooks'; //
 import { Play, Pause, Square, BookOpen, Clock } from 'lucide-react';
 
 export default function TimerPage() {
   const router = useRouter();
   const timer = useTimer();
-  const [books, setBooks] = useState<any[]>([]);
+  
+  // Use useBooks to fetch only approved books with polling
+  const { books, loading } = useBooks('APPROVED');
+  
   const [selectedBook, setSelectedBook] = useState('');
   const [notes, setNotes] = useState('');
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
-  const fetchBooks = async () => {
-    try {
-      const response = await fetch('/api/books?status=APPROVED');
-      const data = await response.json();
-      setBooks(data);
-    } catch (error) {
-      console.error('Failed to fetch books:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleStart = () => {
     if (!selectedBook) {

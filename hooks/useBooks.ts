@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Book {
   id: string;
@@ -14,139 +14,71 @@ interface Book {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  user?: { name: string; email: string };
 }
 
 export function useBooks(status?: 'PENDING' | 'APPROVED' | 'REJECTED') {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const queryKey = ['books', status || 'all'];
 
-  const fetchBooks = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
+  // 1. FETCHING (with Real-time Polling)
+  const { data: books = [], isLoading: loading, error, refetch } = useQuery({
+    queryKey,
+    queryFn: async () => {
       const url = status ? `/api/books?status=${status}` : '/api/books';
       const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch books');
+      return response.json() as Promise<Book[]>;
+    },
+    refetchInterval: 2000, // Poll every 2 seconds for updates
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch books');
-      }
-
-      const data = await response.json();
-      setBooks(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch books');
-      console.error('Error fetching books:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBooks();
-  }, [status]);
-
-  const addBook = async (bookData: {
-    title: string;
-    author: string;
-    coverUrl?: string;
-    googleBooksId?: string;
-    pageCount?: number;
-    description?: string;
-  }) => {
-    try {
+  // 2. ADD BOOK
+  const addBook = useMutation({
+    mutationFn: async (bookData: any) => {
       const response = await fetch('/api/books', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bookData),
       });
+      if (!response.ok) throw new Error('Failed to add book');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to add book');
-      }
-
-      const newBook = await response.json();
-      setBooks((prev) => [newBook, ...prev]);
-      return newBook;
-    } catch (err: any) {
-      setError(err.message || 'Failed to add book');
-      throw err;
-    }
-  };
-
-  const updateBookStatus = async (
-    bookId: string,
-    status: 'APPROVED' | 'REJECTED'
-  ) => {
-    try {
-      const response = await fetch(`/api/books/${bookId}`, {
+  // 3. UPDATE STATUS
+  const updateBookStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: 'APPROVED' | 'REJECTED' }) => {
+      const response = await fetch(`/api/books/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
+      if (!response.ok) throw new Error('Failed to update book status');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Failed to update book status');
-      }
-
-      const updatedBook = await response.json();
-      setBooks((prev) =>
-        prev.map((book) => (book.id === bookId ? updatedBook : book))
-      );
-      return updatedBook;
-    } catch (err: any) {
-      setError(err.message || 'Failed to update book status');
-      throw err;
-    }
-  };
-
-  const deleteBook = async (bookId: string) => {
-    try {
-      const response = await fetch(`/api/books/${bookId}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete book');
-      }
-
-      setBooks((prev) => prev.filter((book) => book.id !== bookId));
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete book');
-      throw err;
-    }
-  };
-
+  // 4. SEARCH (Helper function)
   const searchBooks = async (query: string) => {
-    try {
-      const response = await fetch(
-        `/api/books/search?q=${encodeURIComponent(query)}`
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to search books');
-      }
-
-      return await response.json();
-    } catch (err: any) {
-      setError(err.message || 'Failed to search books');
-      throw err;
-    }
-  };
-
-  const refresh = () => {
-    fetchBooks();
+    const response = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`);
+    if (!response.ok) throw new Error('Failed to search books');
+    return response.json();
   };
 
   return {
     books,
     loading,
     error,
-    addBook,
-    updateBookStatus,
-    deleteBook,
+    addBook: addBook.mutateAsync,
+    updateBookStatus: updateBookStatus.mutateAsync,
     searchBooks,
-    refresh,
+    refresh: refetch,
   };
 }

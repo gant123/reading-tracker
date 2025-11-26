@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import {  Outfit } from 'next/font/google';
 import '@/styles/globals.css';
 import { Toaster } from '@/components/Toaster';
+import Providers from './providers'; //
 
-const inter = Inter({ subsets: ['latin'] });
+const outfit = Outfit({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Reading Tracker & Rewards',
   description: 'Track reading progress, earn rewards, and build healthy reading habits',
-  keywords: ['reading', 'education', 'kids', 'rewards', 'books'],
+  icons: {
+    icon: '/logo.png', // Uses your new logo as the browser tab icon too!
+  },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -18,9 +20,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
-        <Toaster />
+      <body className={`${outfit.className} min-h-screen bg-gray-50`}>
+        <div className="fixed inset-0 z-[-1] opacity-40 pointer-events-none"
+             style={{
+               backgroundImage: `radial-gradient(circle at 50% 120%, #e0e7ff, #f3e8ff, transparent)`
+             }} 
+        />
+        <Providers> 
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Gift, Plus, Trash2, Check } from 'lucide-react';
 import Link from 'next/link';
+import { useRewards } from '@/hooks/useRewards'; //
 
 export default function ParentRewardsPage() {
-  const [rewards, setRewards] = useState<any[]>([]);
-  const [pendingRedemptions, setPendingRedemptions] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { 
+    rewards, 
+    loading, 
+    createReward, 
+    deleteReward, 
+    completeReward,
+    getPendingRedemptions 
+  } = useRewards();
+
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -18,56 +25,21 @@ export default function ParentRewardsPage() {
 
   const iconOptions = ['🎁', '🎮', '🍕', '🎬', '🎨', '⚽', '🎸', '📱', '🍦', '🎪', '🎯', '🏆'];
 
-  useEffect(() => {
-    fetchRewards();
-    fetchPendingRedemptions();
-  }, []);
-
-  const fetchRewards = async () => {
-    try {
-      const response = await fetch('/api/rewards');
-      const data = await response.json();
-      setRewards(data);
-    } catch (error) {
-      console.error('Failed to fetch rewards:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchPendingRedemptions = async () => {
-    try {
-      const response = await fetch('/api/rewards/pending');
-      if (response.ok) {
-        const data = await response.json();
-        setPendingRedemptions(data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch pending redemptions:', error);
-    }
-  };
+  // Calculate pending redemptions from the hook data
+  const pendingRedemptions = getPendingRedemptions();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/rewards', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          pointsCost: parseInt(formData.pointsCost),
-        }),
+      await createReward({
+        ...formData,
+        pointsCost: parseInt(formData.pointsCost),
       });
 
-      if (response.ok) {
-        alert('Reward created successfully!');
-        setFormData({ title: '', description: '', pointsCost: '', icon: '🎁' });
-        setShowForm(false);
-        fetchRewards();
-      } else {
-        alert('Failed to create reward');
-      }
+      alert('Reward created successfully!');
+      setFormData({ title: '', description: '', pointsCost: '', icon: '🎁' });
+      setShowForm(false);
     } catch (error) {
       console.error('Failed to create reward:', error);
       alert('Failed to create reward');
@@ -78,14 +50,8 @@ export default function ParentRewardsPage() {
     if (!confirm('Are you sure you want to delete this reward?')) return;
 
     try {
-      const response = await fetch(`/api/rewards/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        alert('Reward deleted');
-        fetchRewards();
-      }
+      await deleteReward(id);
+      // No alert needed, UI updates automatically
     } catch (error) {
       console.error('Failed to delete reward:', error);
     }
@@ -93,14 +59,8 @@ export default function ParentRewardsPage() {
 
   const handleComplete = async (userRewardId: string) => {
     try {
-      const response = await fetch(`/api/rewards/${userRewardId}/complete`, {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        alert('Reward marked as completed!');
-        fetchPendingRedemptions();
-      }
+      await completeReward(userRewardId);
+      alert('Reward marked as completed!');
     } catch (error) {
       console.error('Failed to complete reward:', error);
     }
@@ -130,14 +90,15 @@ export default function ParentRewardsPage() {
               Pending Completions ({pendingRedemptions.length})
             </h2>
             <div className="space-y-3">
-              {pendingRedemptions.map((ur: any) => (
+              {pendingRedemptions.map((ur) => (
                 <div key={ur.id} className="bg-white rounded-lg p-4 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl">{ur.reward.icon}</span>
                     <div>
                       <p className="font-semibold">{ur.reward.title}</p>
+                      {/* Assuming user relation exists in the data fetched by hook */}
                       <p className="text-sm text-gray-600">
-                        Redeemed by {ur.user.name}
+                        Redeemed by {ur.userId} 
                       </p>
                     </div>
                   </div>

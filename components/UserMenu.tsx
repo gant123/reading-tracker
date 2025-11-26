@@ -4,10 +4,12 @@ import { useState, useRef, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 import { LogOut, ChevronDown, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useAvatarDisplay } from '@/hooks/useAvatar'; // Import hook
 
 interface UserMenuProps {
   userName: string;
   userEmail?: string;
+  // Fallback props (from server session)
   avatarStyle?: string;
   avatarSeed?: string;
   avatarColor?: string;
@@ -25,13 +27,16 @@ export function UserMenu({
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Use the hook to get real-time avatar data
+  // Only runs on client, effectively overriding server props once loaded
+  const { data: realtimeAvatar } = useAvatarDisplay();
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -40,9 +45,14 @@ export function UserMenu({
     await signOut({ callbackUrl: '/login' });
   };
 
-  const seed = avatarSeed || userName;
-  const bgColor = avatarColor?.replace('#', '') || '60a5fa';
-  const avatarUrl = `https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${encodeURIComponent(seed)}&size=64&backgroundColor=${bgColor}`;
+  // Prioritize Real-time data -> then Props -> then Defaults
+  const currentStyle = realtimeAvatar?.avatarStyle || avatarStyle;
+  const currentSeed = realtimeAvatar?.avatarSeed || avatarSeed || userName;
+  const rawColor = realtimeAvatar?.avatarColor || avatarColor;
+  const bgColor = rawColor?.replace('#', '') || '60a5fa';
+  const points = realtimeAvatar?.points; // We can even show points now if we want!
+
+  const avatarUrl = `https://api.dicebear.com/7.x/${currentStyle}/svg?seed=${encodeURIComponent(currentSeed)}&size=64&backgroundColor=${bgColor}`;
 
   return (
     <div className="relative" ref={menuRef}>
@@ -62,7 +72,13 @@ export function UserMenu({
             </div>
           )}
         </div>
-        <span className="text-gray-700 font-medium hidden sm:block">{userName}</span>
+        <div className="hidden sm:flex flex-col items-start">
+            <span className="text-gray-700 font-medium text-sm leading-none mb-0.5">{userName}</span>
+            {/* Optional: Show live points for child */}
+            {role === 'CHILD' && points !== undefined && (
+                <span className="text-xs text-amber-600 font-semibold">{points} pts</span>
+            )}
+        </div>
         <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 

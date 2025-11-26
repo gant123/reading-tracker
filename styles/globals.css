@@ -92,3 +92,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .btn-hover-effect {
+    @apply transition-transform active:scale-95 hover:shadow-lg;
+  }
+  
+  /* Makes cards float a bit */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+}
