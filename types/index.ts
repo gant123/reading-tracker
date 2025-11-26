@@ -120,10 +120,10 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
-  interface JWT {
-    id: string;
-    role: UserRole;
-    parentId?: string | null;
-  }
-}
+// declare module 'next-auth/jwt' {
+//   interface JWT {
+//     id: string;
+//     role: UserRole;
+//     parentId?: string | null;
+//   }
+// }
