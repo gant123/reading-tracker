@@ -11,9 +11,20 @@ interface DashboardLayoutProps {
   role: 'PARENT' | 'CHILD';
   userName: string;
   userEmail: string;
+  avatarStyle?: string;
+  avatarSeed?: string;
+  avatarColor?: string;
 }
 
-export function DashboardLayout({ children, role, userName, userEmail }: DashboardLayoutProps) {
+export function DashboardLayout({ 
+  children, 
+  role, 
+  userName, 
+  userEmail,
+  avatarStyle,
+  avatarSeed,
+  avatarColor,
+}: DashboardLayoutProps) {
   const title = role === 'PARENT' ? 'Parent Dashboard' : 'Reading Tracker';
   const logoColor = role === 'PARENT' ? 'text-purple-600' : 'text-blue-600';
   const homeUrl = role === 'PARENT' ? '/parent' : '/child';
@@ -28,7 +39,14 @@ export function DashboardLayout({ children, role, userName, userEmail }: Dashboa
               <BookOpen className={`w-8 h-8 ${logoColor}`} />
               <span className="font-bold text-xl">{title}</span>
             </Link>
-            <UserMenu userName={userName} userEmail={userEmail} />
+            <UserMenu 
+              userName={userName} 
+              userEmail={userEmail}
+              avatarStyle={avatarStyle}
+              avatarSeed={avatarSeed}
+              avatarColor={avatarColor}
+              role={role}
+            />
           </div>
         </div>
       </nav>

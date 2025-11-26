@@ -32,6 +32,13 @@ export default async function ParentChildrenPage() {
     },
   });
 
+  const getAvatarUrl = (child: any) => {
+    const seed = child.avatarSeed || child.name;
+    const style = child.avatarStyle || 'adventurer';
+    const bgColor = (child.avatarColor || '60a5fa').replace('#', '');
+    return `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}&size=128&backgroundColor=${bgColor}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
       <nav className="bg-white border-b border-gray-200">
@@ -60,14 +67,16 @@ export default async function ParentChildrenPage() {
 
         {children.length > 0 ? (
           <div className="space-y-8">
-            {children.map((child:any) => (
+            {children.map((child: any) => (
               <div key={child.id} className="bg-white rounded-xl shadow-lg overflow-hidden">
                 {/* Child Header */}
                 <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-3xl font-bold text-indigo-600">
-                      {child.name[0].toUpperCase()}
-                    </div>
+                    <img
+                      src={getAvatarUrl(child)}
+                      alt={child.name}
+                      className="w-16 h-16 rounded-full ring-4 ring-white/30 shadow-lg"
+                    />
                     <div className="text-white">
                       <h2 className="text-2xl font-bold">{child.name}</h2>
                       <p className="text-indigo-100">{child.email}</p>
@@ -117,7 +126,7 @@ export default async function ParentChildrenPage() {
                       <h3 className="text-lg font-bold mb-4">Recent Reading Sessions</h3>
                       {child.sessions.length > 0 ? (
                         <div className="space-y-3">
-                          {child.sessions.slice(0, 5).map((session:any) => (
+                          {child.sessions.slice(0, 5).map((session: any) => (
                             <div key={session.id} className="border-l-4 border-indigo-500 pl-4 py-2">
                               <p className="font-semibold text-gray-900">{session.book.title}</p>
                               <p className="text-sm text-gray-600">
@@ -145,7 +154,7 @@ export default async function ParentChildrenPage() {
                       </h3>
                       {child.achievements.length > 0 ? (
                         <div className="grid grid-cols-3 gap-3">
-                          {child.achievements.map((ua:any) => (
+                          {child.achievements.map((ua: any) => (
                             <div
                               key={ua.id}
                               className="flex flex-col items-center p-3 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-200"
@@ -168,7 +177,7 @@ export default async function ParentChildrenPage() {
                     <h3 className="text-lg font-bold mb-4">Current Books</h3>
                     {child.books.length > 0 ? (
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {child.books.map((book:any) => (
+                        {child.books.map((book: any) => (
                           <div key={book.id} className="border rounded-lg p-3 hover:shadow-md transition-shadow">
                             {book.coverUrl && (
                               <img

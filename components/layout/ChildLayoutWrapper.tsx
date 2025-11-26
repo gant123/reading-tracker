@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
 import { DashboardLayout } from './DashboardLayout';
 import { ReactNode } from 'react';
 
@@ -14,11 +15,24 @@ export async function ChildLayoutWrapper({ children }: ChildLayoutWrapperProps) 
     redirect('/login');
   }
 
+  // Fetch user's avatar settings
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      avatarStyle: true,
+      avatarSeed: true,
+      avatarColor: true,
+    },
+  });
+
   return (
     <DashboardLayout
       role="CHILD"
       userName={session.user.name || 'User'}
       userEmail={session.user.email || ''}
+      avatarStyle={user?.avatarStyle}
+      avatarSeed={user?.avatarSeed || session.user.name || undefined}
+      avatarColor={user?.avatarColor}
     >
       {children}
     </DashboardLayout>

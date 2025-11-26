@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { BookOpen, Trophy, Flame, Star, Clock, TrendingUp, Award } from 'lucide-react';
+import { BookOpen, Trophy, Flame, Star, Clock, TrendingUp, Award, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function ChildDashboard() {
@@ -56,199 +56,236 @@ export default async function ChildDashboard() {
     }
   }
 
+  // Generate avatar URL
+  const avatarSeed = user.avatarSeed || user.name;
+  const avatarStyle = user.avatarStyle || 'adventurer';
+  const avatarColor = (user.avatarColor || '60a5fa').replace('#', '');
+  const avatarUrl = `https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${encodeURIComponent(avatarSeed)}&size=128&backgroundColor=${avatarColor}`;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
+      {/* Welcome Section with Avatar */}
+      <div className="mb-8 flex items-center gap-6">
+        <Link href="/child/avatar" className="relative group">
+          <img
+            src={avatarUrl}
+            alt={user.name}
+            className="w-20 h-20 rounded-full ring-4 ring-white shadow-lg group-hover:ring-purple-300 transition-all"
+          />
+          <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full p-1.5 shadow-lg group-hover:scale-110 transition-transform">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+        </Link>
+        <div>
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Welcome back, {user.name}! 👋
           </h1>
           <p className="text-lg text-gray-600">{streakStatus}</p>
         </div>
+      </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-600 font-medium">Points</span>
-              <Star className="w-6 h-6 text-amber-500" />
-            </div>
-            <div className="text-4xl font-bold text-gray-900">{user.points}</div>
-            <p className="text-sm text-gray-500 mt-1">Total earned</p>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-600 font-medium">Points</span>
+            <Star className="w-6 h-6 text-amber-500" />
           </div>
-
-          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-600 font-medium">Minutes</span>
-              <Clock className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="text-4xl font-bold text-gray-900">{user.totalMinutes}</div>
-            <p className="text-sm text-gray-500 mt-1">Time reading</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-600 font-medium">Streak</span>
-              <Flame className="w-6 h-6 text-orange-500" />
-            </div>
-            <div className="text-4xl font-bold text-gray-900">{user.streakDays}</div>
-            <p className="text-sm text-gray-500 mt-1">Days in a row</p>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-600 font-medium">Books</span>
-              <Trophy className="w-6 h-6 text-green-600" />
-            </div>
-            <div className="text-4xl font-bold text-gray-900">{user.books.length}</div>
-            <p className="text-sm text-gray-500 mt-1">Approved books</p>
-          </div>
+          <div className="text-4xl font-bold text-gray-900">{user.points}</div>
+          <p className="text-sm text-gray-500 mt-1">Total earned</p>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Link
-            href="/child/timer"
-            className="group bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-8 hover:shadow-xl transition-all hover:scale-105 transform"
-          >
-            <Clock className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-            <h3 className="text-2xl font-bold mb-2">Start Reading</h3>
-            <p className="text-blue-100">Track your reading session with the timer</p>
-          </Link>
-
-          <Link
-            href="/child/books"
-            className="group bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-8 hover:shadow-xl transition-all hover:scale-105 transform"
-          >
-            <BookOpen className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-            <h3 className="text-2xl font-bold mb-2">My Books</h3>
-            <p className="text-green-100">Search and manage your book collection</p>
-          </Link>
-
-          <Link
-            href="/child/rewards"
-            className="group bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-8 hover:shadow-xl transition-all hover:scale-105 transform"
-          >
-            <Trophy className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-            <h3 className="text-2xl font-bold mb-2">Reward Shop</h3>
-            <p className="text-purple-100">Redeem your points for awesome rewards</p>
-          </Link>
+        <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-600 font-medium">Minutes</span>
+            <Clock className="w-6 h-6 text-blue-600" />
+          </div>
+          <div className="text-4xl font-bold text-gray-900">{user.totalMinutes}</div>
+          <p className="text-sm text-gray-500 mt-1">Time reading</p>
         </div>
 
-        {/* Progress Section */}
-        {user.streakDays >= 3 && (
-          <div className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl p-6 mb-8 text-white shadow-lg">
-            <div className="flex items-center gap-4">
-              <Award className="w-16 h-16" />
-              <div>
-                <h3 className="text-2xl font-bold mb-1">Streak Bonus Active! 🔥</h3>
-                <p className="text-amber-100">
-                  You're earning {user.streakDays >= 7 ? '50%' : '25%'} bonus points for your {user.streakDays}-day streak!
-                </p>
-              </div>
+        <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-600 font-medium">Streak</span>
+            <Flame className="w-6 h-6 text-orange-500" />
+          </div>
+          <div className="text-4xl font-bold text-gray-900">{user.streakDays}</div>
+          <p className="text-sm text-gray-500 mt-1">Days in a row</p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-gray-600 font-medium">Books</span>
+            <Trophy className="w-6 h-6 text-green-600" />
+          </div>
+          <div className="text-4xl font-bold text-gray-900">{user.books.length}</div>
+          <p className="text-sm text-gray-500 mt-1">Approved books</p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <Link
+          href="/child/timer"
+          className="group bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <Clock className="w-10 h-10 mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold mb-1">Start Reading</h3>
+          <p className="text-blue-100 text-sm">Track your reading session</p>
+        </Link>
+
+        <Link
+          href="/child/books"
+          className="group bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <BookOpen className="w-10 h-10 mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold mb-1">My Books</h3>
+          <p className="text-green-100 text-sm">Manage your collection</p>
+        </Link>
+
+        <Link
+          href="/child/rewards"
+          className="group bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <Trophy className="w-10 h-10 mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold mb-1">Reward Shop</h3>
+          <p className="text-purple-100 text-sm">Redeem your points</p>
+        </Link>
+
+        <Link
+          href="/child/avatar"
+          className="group relative bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-xl p-6 hover:shadow-xl transition-all hover:scale-105 transform overflow-hidden"
+        >
+          {/* Sparkle decorations */}
+          <div className="absolute top-2 right-2 opacity-50">
+            <Sparkles className="w-4 h-4 animate-pulse" />
+          </div>
+          <div className="absolute bottom-4 right-6 opacity-30">
+            <Sparkles className="w-6 h-6 animate-pulse" style={{ animationDelay: '0.5s' }} />
+          </div>
+          
+          <Sparkles className="w-10 h-10 mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold mb-1">Avatar Shop</h3>
+          <p className="text-pink-100 text-sm">Customize your look!</p>
+          <span className="absolute top-2 left-2 bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+            NEW
+          </span>
+        </Link>
+      </div>
+
+      {/* Progress Section */}
+      {user.streakDays >= 3 && (
+        <div className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl p-6 mb-8 text-white shadow-lg">
+          <div className="flex items-center gap-4">
+            <Award className="w-16 h-16" />
+            <div>
+              <h3 className="text-2xl font-bold mb-1">Streak Bonus Active! 🔥</h3>
+              <p className="text-amber-100">
+                You're earning {user.streakDays >= 7 ? '50%' : '25%'} bonus points for your {user.streakDays}-day streak!
+              </p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Sessions */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">Recent Reading</h2>
-              <TrendingUp className="w-6 h-6 text-blue-600" />
-            </div>
-            {user.sessions.length > 0 ? (
-              <div className="space-y-4">
-                {user.sessions.map((session) => (
-                  <div key={session.id} className="border-l-4 border-blue-500 pl-4 py-2 hover:bg-blue-50 rounded-r transition-colors">
-                    <div className="font-semibold text-gray-900 text-lg">{session.book.title}</div>
-                    <div className="text-sm text-gray-600 mb-1">by {session.book.author}</div>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="flex items-center gap-1 text-blue-600">
-                        <Clock className="w-4 h-4" />
-                        {session.durationMinutes} min
-                      </span>
-                      <span className="flex items-center gap-1 text-amber-600">
-                        <Star className="w-4 h-4" />
-                        {session.pointsEarned} pts
-                      </span>
-                      <span className="text-gray-500">
-                        {new Date(session.startTime).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Clock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 mb-2">No reading sessions yet</p>
-                <p className="text-sm text-gray-400">Start reading to see your progress here!</p>
-              </div>
-            )}
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Recent Sessions */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold">Recent Reading</h2>
+            <TrendingUp className="w-6 h-6 text-blue-600" />
           </div>
-
-          {/* Achievements */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">Achievements</h2>
-              <Award className="w-6 h-6 text-amber-500" />
-            </div>
-            {user.achievements.length > 0 ? (
-              <div className="grid grid-cols-3 gap-4">
-                {user.achievements.map((ua) => (
-                  <div
-                    key={ua.id}
-                    className="flex flex-col items-center p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-200 hover:border-amber-400 transition-colors cursor-pointer"
-                    title={ua.achievement.description}
-                  >
-                    <span className="text-5xl mb-2">{ua.achievement.icon}</span>
-                    <span className="text-xs font-semibold text-center text-gray-700">
-                      {ua.achievement.name}
+          {user.sessions.length > 0 ? (
+            <div className="space-y-4">
+              {user.sessions.map((session) => (
+                <div key={session.id} className="border-l-4 border-blue-500 pl-4 py-2 hover:bg-blue-50 rounded-r transition-colors">
+                  <div className="font-semibold text-gray-900 text-lg">{session.book.title}</div>
+                  <div className="text-sm text-gray-600 mb-1">by {session.book.author}</div>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="flex items-center gap-1 text-blue-600">
+                      <Clock className="w-4 h-4" />
+                      {session.durationMinutes} min
                     </span>
-                    <span className="text-xs text-gray-500 mt-1">
-                      {new Date(ua.earnedAt).toLocaleDateString()}
+                    <span className="flex items-center gap-1 text-amber-600">
+                      <Star className="w-4 h-4" />
+                      {session.pointsEarned} pts
+                    </span>
+                    <span className="text-gray-500">
+                      {new Date(session.startTime).toLocaleDateString()}
                     </span>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 mb-2">No achievements unlocked yet</p>
-                <p className="text-sm text-gray-400">Keep reading to earn your first badge!</p>
-              </div>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Clock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 mb-2">No reading sessions yet</p>
+              <p className="text-sm text-gray-400">Start reading to see your progress here!</p>
+            </div>
+          )}
         </div>
 
-        {/* Tips Section */}
-        <div className="mt-8 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
-          <h3 className="font-bold text-lg mb-3 text-blue-900 flex items-center gap-2">
-            <Star className="w-5 h-5" />
-            Reading Tips
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-800">
-            <div>
-              <p className="font-semibold mb-1">📖 Build a Habit</p>
-              <p className="text-sm">Try to read at the same time every day!</p>
+        {/* Achievements */}
+        <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold">Achievements</h2>
+            <Award className="w-6 h-6 text-amber-500" />
+          </div>
+          {user.achievements.length > 0 ? (
+            <div className="grid grid-cols-3 gap-4">
+              {user.achievements.map((ua) => (
+                <div
+                  key={ua.id}
+                  className="flex flex-col items-center p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-200 hover:border-amber-400 transition-colors cursor-pointer"
+                  title={ua.achievement.description}
+                >
+                  <span className="text-5xl mb-2">{ua.achievement.icon}</span>
+                  <span className="text-xs font-semibold text-center text-gray-700">
+                    {ua.achievement.name}
+                  </span>
+                  <span className="text-xs text-gray-500 mt-1">
+                    {new Date(ua.earnedAt).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div>
-              <p className="font-semibold mb-1">🔥 Maintain Streaks</p>
-              <p className="text-sm">Read 3+ days in a row for bonus points!</p>
+          ) : (
+            <div className="text-center py-12">
+              <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 mb-2">No achievements unlocked yet</p>
+              <p className="text-sm text-gray-400">Keep reading to earn your first badge!</p>
             </div>
-            <div>
-              <p className="font-semibold mb-1">⏰ Use the Timer</p>
-              <p className="text-sm">Track every reading session to earn points!</p>
-            </div>
-            <div>
-              <p className="font-semibold mb-1">🎯 Set Goals</p>
-              <p className="text-sm">Try to read at least 20 minutes per day!</p>
-            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Tips Section */}
+      <div className="mt-8 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+        <h3 className="font-bold text-lg mb-3 text-blue-900 flex items-center gap-2">
+          <Star className="w-5 h-5" />
+          Reading Tips
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-800">
+          <div>
+            <p className="font-semibold mb-1">📖 Build a Habit</p>
+            <p className="text-sm">Try to read at the same time every day!</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">🔥 Maintain Streaks</p>
+            <p className="text-sm">Read 3+ days in a row for bonus points!</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">⏰ Use the Timer</p>
+            <p className="text-sm">Track every reading session to earn points!</p>
+          </div>
+          <div>
+            <p className="font-semibold mb-1">✨ Customize Your Avatar</p>
+            <p className="text-sm">Visit the Avatar Shop to unlock cool styles!</p>
           </div>
         </div>
       </div>
-   
+    </div>
   );
 }
