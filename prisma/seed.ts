@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // Create achievements
+  // Create achievements okwe up
   const achievements = [
     {
       name: 'First Steps',
