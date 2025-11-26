@@ -1,5 +1,4 @@
-import { User, Book, ReadingSession, Achievement, Reward, AvatarItem, UserAvatarItem } from '@prisma/client';
-
+import { User, Book, ReadingSession, Achievement, Reward, AvatarItem, UserAvatarItem } from '@/app/generated/prisma/client';
 export type UserRole = 'PARENT' | 'CHILD';
 export type BookStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type RewardStatus = 'AVAILABLE' | 'REDEEMED' | 'COMPLETED';
