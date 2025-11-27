@@ -1,295 +1,294 @@
-'use client';
-
-import { useQuery } from '@tanstack/react-query';
-import { Gift, Star, Lock, Clock, CheckCircle2, Sparkles, ShoppingBag } from 'lucide-react';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { BookOpen, Trophy, Flame, Star, Clock, TrendingUp, Award, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { useRewards } from '@/hooks/useRewards';
-import { useState } from 'react';
 //
-import { MysteryBox } from '@/components/rewards/MysteryBox'; 
+import { LevelService } from '@/services/levelService';
+import { LevelProgress } from '@/components/dashboard/LevelProgress';
 
-export default function ChildRewardsPage() {
-  const { rewards, redeemedRewards, loading: loadingRewards, redeemReward } = useRewards();
-  const [redeeming, setRedeeming] = useState<string | null>(null);
+export default async function ChildDashboard() {
+  const session = await auth();
 
-  // Fetch user points - Extract refetch here
-  const { data: pointData, isLoading: loadingPoints, refetch: refetchPoints } = useQuery({
-    queryKey: ['user-points'],
-    queryFn: async () => {
-      const res = await fetch('/api/avatar/points');
-      if (!res.ok) return { points: 0 };
-      return res.json();
+  if (!session || session.user.role !== 'CHILD') {
+    redirect('/login');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: {
+      books: {
+        where: { status: 'APPROVED' },
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+      },
+      sessions: {
+        take: 5,
+        orderBy: { startTime: 'desc' },
+        include: { book: true },
+      },
+      achievements: {
+        include: { achievement: true },
+        orderBy: { earnedAt: 'desc' },
+        take: 6,
+      },
     },
-    refetchInterval: 5000,
   });
 
-  const userPoints = pointData?.points || 0;
-  const loading = loadingRewards || loadingPoints;
+  if (!user) {
+    redirect('/login');
+  }
 
-  // Separate redeemed rewards by status
-  const pendingRewards = redeemedRewards.filter((ur: any) => ur.status === 'REDEEMED');
-  const completedRewards = redeemedRewards.filter((ur: any) => ur.status === 'COMPLETED');
+  //
+  const levelData = LevelService.calculateLevel(user.totalMinutes);
 
-  const handleRedeem = async (rewardId: string, rewardTitle: string, pointsCost: number) => {
-    if (!confirm(`Redeem "${rewardTitle}" for ${pointsCost} points?\n\nYour parent will need to approve and complete this reward.`)) return;
-
-    setRedeeming(rewardId);
-    try {
-      await redeemReward(rewardId);
-    } catch (error: any) {
-      console.error('Failed to redeem reward:', error);
-      alert(error.message || 'Failed to redeem reward');
-    } finally {
-      setRedeeming(null);
+  // Calculate streak status
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const lastReadDate = user.lastReadDate ? new Date(user.lastReadDate) : null;
+  let streakStatus = 'No streak yet';
+  
+  if (lastReadDate) {
+    lastReadDate.setHours(0, 0, 0, 0);
+    const diffTime = today.getTime() - lastReadDate.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) {
+      streakStatus = '🔥 On fire! Read today!';
+    } else if (diffDays === 1) {
+      streakStatus = '⚠️ Read today to keep your streak!';
+    } else {
+      streakStatus = '💔 Streak broken. Start a new one!';
     }
-  };
+  }
 
-  const formatDate = (date: Date | string | null | undefined) => {
-    if (!date) return '';
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  };
+  // Generate avatar URL
+  const avatarSeed = user.avatarSeed || user.name;
+  const avatarStyle = user.avatarStyle || 'adventurer';
+  const avatarColor = (user.avatarColor || '60a5fa').replace('#', '');
+  const avatarUrl = `https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${encodeURIComponent(avatarSeed)}&size=128&backgroundColor=${avatarColor}`;
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-          <Gift className="w-8 h-8 text-purple-600" />
-          Reward Shop
-        </h1>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Spend your hard-earned points on awesome rewards!
-        </p>
-      </div>
-
-      {/* Points Banner */}
-      <div className="bg-gradient-to-r from-amber-400 via-orange-500 to-pink-500 rounded-2xl p-5 sm:p-8 mb-6 sm:mb-8 text-white shadow-lg relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-        
-        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <p className="text-amber-100 font-medium mb-1">Your Balance</p>
-            <div className="flex items-center gap-3">
-              <Star className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-300 fill-yellow-300" />
-              <span className="text-4xl sm:text-5xl lg:text-6xl font-black">{userPoints}</span>
-              <span className="text-xl sm:text-2xl text-amber-100">points</span>
-            </div>
+      {/* Welcome Section */}
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left">
+        <Link href="/child/avatar" className="relative group">
+          <img
+            src={avatarUrl}
+            alt={user.name}
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full ring-4 ring-white shadow-lg group-hover:ring-purple-300 transition-all"
+          />
+          <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full p-1 sm:p-1.5 shadow-lg group-hover:scale-110 transition-transform">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
           </div>
-          <Link
-            href="/child/timer"
-            className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-5 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
-          >
-            <Sparkles className="w-5 h-5" />
-            Earn More Points
-          </Link>
+        </Link>
+        <div>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
+            Welcome back, {user.name}! 👋
+          </h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">{streakStatus}</p>
         </div>
       </div>
 
-      {/* --- NEW MYSTERY BOX SECTION --- */}
-      <div className="mb-8">
-         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-500" />
-            Special Offers
-         </h2>
-         <div className="max-w-md">
-            <MysteryBox userPoints={userPoints} onPurchase={() => refetchPoints()} />
-         </div>
-      </div>
-      {/* ------------------------------- */}
+      {/* --- NEW LEVEL PROGRESS BAR --- */}
+      <LevelProgress levelData={levelData} />
+      {/* ----------------------------- */}
 
-      {/* Pending Rewards - Waiting for Parent */}
-      {pendingRewards.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-              <Clock className="w-5 h-5 text-white" />
-            </div>
+      {/* Stats Cards - Responsive Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-gray-600 font-medium text-xs sm:text-sm lg:text-base">Points</span>
+            <Star className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
+          </div>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{user.points}</div>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">Spendable points</p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-gray-600 font-medium text-xs sm:text-sm lg:text-base">Minutes</span>
+            <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+          </div>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{user.totalMinutes}</div>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">Lifetime reading</p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-gray-600 font-medium text-xs sm:text-sm lg:text-base">Streak</span>
+            <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-orange-500" />
+          </div>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{user.streakDays}</div>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">Days in a row</p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow">
+          <div className="flex items-center justify-between mb-1 sm:mb-2">
+            <span className="text-gray-600 font-medium text-xs sm:text-sm lg:text-base">Books</span>
+            <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+          </div>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">{user.books.length}</div>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">Approved books</p>
+        </div>
+      </div>
+
+      {/* Quick Actions - Responsive Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+        <Link
+          href="/child/timer"
+          className="group bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-4 sm:p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <Clock className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-0.5 sm:mb-1">Start Reading</h3>
+          <p className="text-blue-100 text-xs sm:text-sm hidden sm:block">Track your session</p>
+        </Link>
+
+        <Link
+          href="/child/books"
+          className="group bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4 sm:p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-0.5 sm:mb-1">My Books</h3>
+          <p className="text-green-100 text-xs sm:text-sm hidden sm:block">Your collection</p>
+        </Link>
+
+        <Link
+          href="/child/rewards"
+          className="group bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-4 sm:p-6 hover:shadow-xl transition-all hover:scale-105 transform"
+        >
+          <Trophy className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-0.5 sm:mb-1">Rewards</h3>
+          <p className="text-purple-100 text-xs sm:text-sm hidden sm:block">Redeem points</p>
+        </Link>
+
+        <Link
+          href="/child/avatar"
+          className="group relative bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white rounded-xl p-4 sm:p-6 hover:shadow-xl transition-all hover:scale-105 transform overflow-hidden"
+        >
+          <div className="absolute top-2 right-2 opacity-50">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 animate-pulse" />
+          </div>
+          
+          <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 group-hover:scale-110 transition-transform" />
+          <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-0.5 sm:mb-1">Avatar</h3>
+          <p className="text-pink-100 text-xs sm:text-sm hidden sm:block">Customize!</p>
+          <span className="absolute top-2 left-2 bg-white/20 text-white text-[10px] sm:text-xs font-bold px-1.5 sm:px-2 py-0.5 rounded-full">
+            NEW
+          </span>
+        </Link>
+      </div>
+
+      {/* Progress Section */}
+      {user.streakDays >= 3 && (
+        <div className="bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-white shadow-lg">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Award className="w-10 h-10 sm:w-16 sm:h-16 flex-shrink-0" />
             <div>
-              <h2 className="text-lg font-bold text-blue-900">Waiting for Parent</h2>
-              <p className="text-blue-700 text-sm">Your parent will complete these rewards soon!</p>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-0.5 sm:mb-1">Streak Bonus Active! 🔥</h3>
+              <p className="text-amber-100 text-sm sm:text-base">
+                You're earning {user.streakDays >= 7 ? '50%' : '25%'} bonus points for your {user.streakDays}-day streak!
+              </p>
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {pendingRewards.map((ur: any) => (
-              <div key={ur.id} className="bg-white rounded-xl p-4 flex items-center gap-3 shadow-sm">
-                <span className="text-3xl">{ur.reward.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 truncate">{ur.reward.title}</p>
-                  <p className="text-xs text-blue-600">Redeemed {formatDate(ur.redeemedAt)}</p>
-                </div>
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-blue-500" />
+        </div>
+      )}
+
+      {/* Main Grid - Responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+        {/* Recent Sessions */}
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Recent Reading</h2>
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+          </div>
+          {user.sessions.length > 0 ? (
+            <div className="space-y-3 sm:space-y-4">
+              {user.sessions.map((session) => (
+                <div key={session.id} className="border-l-4 border-blue-500 pl-3 sm:pl-4 py-2 hover:bg-blue-50 rounded-r transition-colors">
+                  <div className="font-semibold text-gray-900 text-sm sm:text-base lg:text-lg">{session.book.title}</div>
+                  <div className="text-xs sm:text-sm text-gray-600 mb-1">by {session.book.author}</div>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                    <span className="flex items-center gap-1 text-blue-600">
+                      <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                      {session.durationMinutes} min
+                    </span>
+                    <span className="flex items-center gap-1 text-amber-600">
+                      <Star className="w-3 h-3 sm:w-4 sm:h-4" />
+                      {session.pointsEarned} pts
+                    </span>
+                    <span className="text-gray-500 hidden sm:inline">
+                      {new Date(session.startTime).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 sm:py-12">
+              <Clock className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+              <p className="text-gray-500 mb-1 sm:mb-2 text-sm sm:text-base">No reading sessions yet</p>
+              <p className="text-xs sm:text-sm text-gray-400">Start reading to see your progress here!</p>
+            </div>
+          )}
         </div>
-      )}
 
-      {/* Completed Rewards */}
-      {completedRewards.length > 0 && (
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <CheckCircle2 className="w-6 h-6 text-green-600" />
-            <h2 className="text-lg font-bold text-green-900">Completed Rewards</h2>
+        {/* Achievements */}
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">Achievements</h2>
+            <Award className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
           </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
-            {completedRewards.slice(0, 8).map((ur: any) => (
-              <div key={ur.id} className="bg-white/80 rounded-lg p-3 flex items-center gap-2">
-                <span className="text-xl sm:text-2xl">{ur.reward.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 text-sm truncate">{ur.reward.title}</p>
-                  <p className="text-xs text-green-600">{formatDate(ur.completedAt)}</p>
+          {user.achievements.length > 0 ? (
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+              {user.achievements.map((ua) => (
+                <div
+                  key={ua.id}
+                  className="flex flex-col items-center p-2 sm:p-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-200 hover:border-amber-400 transition-colors cursor-pointer"
+                  title={ua.achievement.description}
+                >
+                  <span className="text-2xl sm:text-4xl lg:text-5xl mb-1 sm:mb-2">{ua.achievement.icon}</span>
+                  <span className="text-[10px] sm:text-xs font-semibold text-center text-gray-700 line-clamp-2">
+                    {ua.achievement.name}
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1 hidden sm:block">
+                    {new Date(ua.earnedAt).toLocaleDateString()}
+                  </span>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 sm:py-12">
+              <Award className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+              <p className="text-gray-500 mb-1 sm:mb-2 text-sm sm:text-base">No achievements unlocked yet</p>
+              <p className="text-xs sm:text-sm text-gray-400">Keep reading to earn your first badge!</p>
+            </div>
+          )}
         </div>
-      )}
-
-      {/* Available Rewards */}
-      <div className="mb-4 sm:mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <ShoppingBag className="w-6 h-6 text-purple-600" />
-          Available Rewards
-        </h2>
       </div>
-
-      {loading ? (
-        <div className="text-center py-12">
-          <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading rewards...</p>
-        </div>
-      ) : rewards.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {rewards.map((reward: any) => {
-            const canAfford = userPoints >= reward.pointsCost;
-            
-            return (
-              <div
-                key={reward.id}
-                className={`bg-white rounded-2xl shadow-md overflow-hidden border-2 transition-all hover:shadow-lg group ${
-                  canAfford ? 'border-gray-100 hover:border-purple-200' : 'border-gray-100 opacity-75'
-                }`}
-              >
-                <div className="p-5 sm:p-6">
-                  <div className="text-center mb-4">
-                    <span className="text-5xl sm:text-6xl inline-block group-hover:scale-110 transition-transform">
-                      {reward.icon}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-bold text-lg sm:text-xl text-gray-900 text-center mb-2">
-                    {reward.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm text-center mb-4 line-clamp-2">
-                    {reward.description}
-                  </p>
-
-                  <div className="flex items-center justify-center gap-2 mb-4">
-                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 fill-amber-500" />
-                    <span className="text-2xl sm:text-3xl font-black text-gray-900">
-                      {reward.pointsCost}
-                    </span>
-                    <span className="text-gray-500">points</span>
-                  </div>
-
-                  {canAfford ? (
-                    <button
-                      onClick={() => handleRedeem(reward.id, reward.title, reward.pointsCost)}
-                      disabled={redeeming === reward.id}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 sm:py-4 rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all font-bold flex items-center justify-center gap-2 disabled:opacity-50"
-                    >
-                      {redeeming === reward.id ? (
-                        <>
-                          <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Redeeming...
-                        </>
-                      ) : (
-                        <>
-                          <Gift className="w-5 h-5" />
-                          Redeem Reward
-                        </>
-                      )}
-                    </button>
-                  ) : (
-                    <div className="w-full bg-gray-100 text-gray-500 py-3 sm:py-4 rounded-xl text-center font-semibold flex items-center justify-center gap-2">
-                      <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Need {reward.pointsCost - userPoints} more points
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="bg-white rounded-2xl shadow-md p-8 sm:p-12 text-center border border-gray-100">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Gift className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500" />
-          </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
-            No Rewards Available Yet
-          </h3>
-          <p className="text-gray-600 max-w-md mx-auto">
-            Ask your parent to create some rewards for you! In the meantime, keep reading to earn more points.
-          </p>
-        </div>
-      )}
-
-      {/* How to Earn Points Section (Keep as is) */}
-      <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 sm:p-6 border border-blue-200">
-        <h3 className="font-bold text-lg text-blue-900 mb-3 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-500" />
-          How to Earn More Points
+      
+      {/* Tips Section */}
+      <div className="mt-6 sm:mt-8 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 sm:p-6 hidden sm:block">
+        <h3 className="font-bold text-base sm:text-lg mb-2 sm:mb-3 text-blue-900 flex items-center gap-2">
+          <Star className="w-4 h-4 sm:w-5 sm:h-5" />
+          Reading Tips
         </h3>
-        <div className="grid sm:grid-cols-2 gap-3 text-sm">
-          <div className="bg-white/60 rounded-lg p-3 flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-lg">📖</span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">Read Every Minute</p>
-              <p className="text-gray-600">1 point per minute of reading</p>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-blue-800 text-sm">
+          <div>
+            <p className="font-semibold mb-0.5 sm:mb-1">📖 Build a Habit</p>
+            <p className="text-xs sm:text-sm">Try to read at the same time every day!</p>
           </div>
-          <div className="bg-white/60 rounded-lg p-3 flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-lg">🔥</span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">3-Day Streak</p>
-              <p className="text-gray-600">25% bonus points!</p>
-            </div>
+          <div>
+            <p className="font-semibold mb-0.5 sm:mb-1">🔥 Maintain Streaks</p>
+            <p className="text-xs sm:text-sm">Read 3+ days in a row for bonus points!</p>
           </div>
-          <div className="bg-white/60 rounded-lg p-3 flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-lg">⚡</span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">7-Day Streak</p>
-              <p className="text-gray-600">50% bonus points!</p>
-            </div>
+          <div>
+            <p className="font-semibold mb-0.5 sm:mb-1">⏰ Use the Timer</p>
+            <p className="text-xs sm:text-sm">Track every reading session to earn points!</p>
           </div>
-          <div className="bg-white/60 rounded-lg p-3 flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span className="text-lg">🏆</span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900">Achievements</p>
-              <p className="text-gray-600">Unlock badges for milestones</p>
-            </div>
+          <div>
+            <p className="font-semibold mb-0.5 sm:mb-1">✨ Customize Your Avatar</p>
+            <p className="text-xs sm:text-sm">Visit the Avatar Shop to unlock cool styles!</p>
           </div>
         </div>
       </div>

@@ -24,9 +24,10 @@ export class AchievementService {
   }
 
   /**
-   * Check and award new achievements for a user
+   * Check and award new achievements for a user.
+   * Added 'currentSessionDuration' to check for "Marathon" style achievements.
    */
-  static async checkAndAwardAchievements(userId: string) {
+  static async checkAndAwardAchievements(userId: string, currentSessionDuration: number = 0) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -60,9 +61,10 @@ export class AchievementService {
 
       let earned = false;
 
-      // Check based on achievement type
+      // Check based on achievement type (Supports both old and new seed types)
       switch (achievement.type) {
         case 'MINUTES':
+        case 'TOTAL_MINUTES':
           earned = user.totalMinutes >= achievement.requirement;
           break;
         
@@ -71,7 +73,15 @@ export class AchievementService {
           break;
         
         case 'BOOKS':
+        case 'BOOKS_READ':
           earned = user.books.length >= achievement.requirement;
+          break;
+
+        case 'SESSION_DURATION':
+          // Only checks if the session that just finished meets the requirement
+          if (currentSessionDuration > 0) {
+            earned = currentSessionDuration >= achievement.requirement;
+          }
           break;
         
         default:
@@ -113,6 +123,13 @@ export class AchievementService {
       throw new Error('User not found');
     }
 
+    // To calculate progress for "Session Duration" badges, we need the user's best session
+    const bestSession = await prisma.readingSession.aggregate({
+      where: { userId },
+      _max: { durationMinutes: true }
+    });
+    const maxSessionDuration = bestSession._max.durationMinutes || 0;
+
     const allAchievements = await prisma.achievement.findMany();
 
     return allAchievements.map(achievement => {
@@ -126,6 +143,7 @@ export class AchievementService {
 
       switch (achievement.type) {
         case 'MINUTES':
+        case 'TOTAL_MINUTES':
           current = user.totalMinutes;
           progress = Math.min((current / target) * 100, 100);
           break;
@@ -136,7 +154,13 @@ export class AchievementService {
           break;
         
         case 'BOOKS':
+        case 'BOOKS_READ':
           current = user.books.length;
+          progress = Math.min((current / target) * 100, 100);
+          break;
+
+        case 'SESSION_DURATION':
+          current = maxSessionDuration;
           progress = Math.min((current / target) * 100, 100);
           break;
       }
@@ -162,7 +186,7 @@ export class AchievementService {
     description: string;
     icon: string;
     requirement: number;
-    type: 'MINUTES' | 'STREAK' | 'BOOKS';
+    type: string; // Changed from literal to string to support all types
   }) {
     return prisma.achievement.create({
       data,
