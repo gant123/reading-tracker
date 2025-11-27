@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { BookOpen, Plus, Search, X, Check, Clock, AlertCircle } from 'lucide-react';
 import { useBooks } from '@/hooks/useBooks';
+//
+import { BookQuiz } from '@/components/books/BookQuiz'; 
 
 export default function ChildBooksPage() {
   const { books, loading, addBook, searchBooks } = useBooks();
@@ -190,7 +192,7 @@ export default function ChildBooksPage() {
         ) : approvedBooks.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {approvedBooks.map((book) => (
-              <div key={book.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all">
+              <div key={book.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg hover:border-emerald-200 transition-all flex flex-col h-full">
                 {book.coverUrl ? (
                   <img
                     src={book.coverUrl}
@@ -202,12 +204,18 @@ export default function ChildBooksPage() {
                     <BookOpen className="w-12 h-12 text-emerald-300" />
                   </div>
                 )}
-                <div className="p-4">
+                <div className="p-4 flex flex-col flex-1">
                   <h3 className="font-semibold text-gray-900 line-clamp-2 text-sm sm:text-base">{book.title}</h3>
                   <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-1">{book.author}</p>
                   {book.pageCount && (
-                    <p className="text-gray-400 text-xs mt-2">{book.pageCount} pages</p>
+                    <p className="text-gray-400 text-xs mt-2 mb-2">{book.pageCount} pages</p>
                   )}
+                  
+                  {/* ADDED BOOK QUIZ BUTTON HERE */}
+                  <div className="mt-auto pt-3">
+                     <BookQuiz title={book.title} author={book.author} />
+                  </div>
+
                 </div>
               </div>
             ))}

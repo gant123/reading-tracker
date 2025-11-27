@@ -5,13 +5,15 @@ import { Gift, Star, Lock, Clock, CheckCircle2, Sparkles, ShoppingBag } from 'lu
 import Link from 'next/link';
 import { useRewards } from '@/hooks/useRewards';
 import { useState } from 'react';
+//
+import { MysteryBox } from '@/components/rewards/MysteryBox'; 
 
 export default function ChildRewardsPage() {
   const { rewards, redeemedRewards, loading: loadingRewards, redeemReward } = useRewards();
   const [redeeming, setRedeeming] = useState<string | null>(null);
 
-  // Fetch user points
-  const { data: pointData, isLoading: loadingPoints } = useQuery({
+  // Fetch user points - Extract refetch here
+  const { data: pointData, isLoading: loadingPoints, refetch: refetchPoints } = useQuery({
     queryKey: ['user-points'],
     queryFn: async () => {
       const res = await fetch('/api/avatar/points');
@@ -34,7 +36,6 @@ export default function ChildRewardsPage() {
     setRedeeming(rewardId);
     try {
       await redeemReward(rewardId);
-      // Success - the hook will refresh the data
     } catch (error: any) {
       console.error('Failed to redeem reward:', error);
       alert(error.message || 'Failed to redeem reward');
@@ -87,6 +88,18 @@ export default function ChildRewardsPage() {
           </Link>
         </div>
       </div>
+
+      {/* --- NEW MYSTERY BOX SECTION --- */}
+      <div className="mb-8">
+         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-purple-500" />
+            Special Offers
+         </h2>
+         <div className="max-w-md">
+            <MysteryBox userPoints={userPoints} onPurchase={() => refetchPoints()} />
+         </div>
+      </div>
+      {/* ------------------------------- */}
 
       {/* Pending Rewards - Waiting for Parent */}
       {pendingRewards.length > 0 && (
@@ -235,7 +248,7 @@ export default function ChildRewardsPage() {
         </div>
       )}
 
-      {/* How to Earn Points */}
+      {/* How to Earn Points Section (Keep as is) */}
       <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 sm:p-6 border border-blue-200">
         <h3 className="font-bold text-lg text-blue-900 mb-3 flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-purple-500" />
