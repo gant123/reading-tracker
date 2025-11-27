@@ -23,12 +23,17 @@ interface UserReward {
   completedAt?: Date | null;
   createdAt: Date;
   reward: Reward;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export function useRewards() {
   const queryClient = useQueryClient();
 
-  // 1. FETCH REWARDS (Polling)
+  // 1. FETCH REWARDS (with polling)
   const { 
     data: rewards = [], 
     isLoading: loadingRewards, 
@@ -40,10 +45,10 @@ export function useRewards() {
       if (!res.ok) throw new Error('Failed to fetch rewards');
       return res.json() as Promise<Reward[]>;
     },
-    refetchInterval: 2000, // Poll every 2s
+    refetchInterval: 3000, // Poll every 3s
   });
 
-  // 2. FETCH REDEEMED (Polling)
+  // 2. FETCH REDEEMED REWARDS (with polling) - for children
   const { 
     data: redeemedRewards = [], 
     isLoading: loadingRedeemed 
@@ -54,10 +59,28 @@ export function useRewards() {
       if (!res.ok) throw new Error('Failed to fetch redeemed rewards');
       return res.json() as Promise<UserReward[]>;
     },
-    refetchInterval: 2000, // Poll every 2s
+    refetchInterval: 3000,
   });
 
-  // 3. CREATE REWARD
+  // 3. FETCH PENDING COMPLETIONS (with polling) - for parents
+  const { 
+    data: pendingCompletions = [], 
+    isLoading: loadingPending 
+  } = useQuery({
+    queryKey: ['pending-completions'],
+    queryFn: async () => {
+      const res = await fetch('/api/rewards/pending');
+      if (!res.ok) {
+        // If not a parent or endpoint doesn't exist, return empty array
+        return [];
+      }
+      return res.json() as Promise<UserReward[]>;
+    },
+    refetchInterval: 3000,
+    retry: false, // Don't retry if it fails (child users will get 401)
+  });
+
+  // 4. CREATE REWARD
   const createReward = useMutation({
     mutationFn: async (rewardData: { title: string; description: string; pointsCost: number; icon: string }) => {
       const res = await fetch('/api/rewards', {
@@ -73,7 +96,7 @@ export function useRewards() {
     },
   });
 
-  // 4. REDEEM REWARD
+  // 5. REDEEM REWARD
   const redeemReward = useMutation({
     mutationFn: async (rewardId: string) => {
       const res = await fetch(`/api/rewards/${rewardId}/redeem`, {
@@ -88,12 +111,12 @@ export function useRewards() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rewards'] });
       queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
-      // Also refresh points (avatar) if you have a hook for that
-      queryClient.invalidateQueries({ queryKey: ['user-points'] }); 
+      queryClient.invalidateQueries({ queryKey: ['user-points'] });
+      queryClient.invalidateQueries({ queryKey: ['avatar-display'] });
     },
   });
 
-  // 5. DELETE REWARD
+  // 6. DELETE REWARD
   const deleteReward = useMutation({
     mutationFn: async (rewardId: string) => {
       const res = await fetch(`/api/rewards/${rewardId}`, {
@@ -106,41 +129,52 @@ export function useRewards() {
     },
   });
 
-  // 6. COMPLETE REWARD
+  // 7. COMPLETE REWARD
   const completeReward = useMutation({
     mutationFn: async (userRewardId: string) => {
       const res = await fetch(`/api/rewards/${userRewardId}/complete`, {
         method: 'POST',
       });
       if (!res.ok) throw new Error('Failed to complete reward');
+      return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
+      queryClient.invalidateQueries({ queryKey: ['pending-completions'] });
     },
   });
 
-  // Helpers
-  const getAvailableRewards = () => rewards.filter((r) => r.canAfford !== false);
-  const getUnavailableRewards = () => rewards.filter((r) => r.canAfford === false);
-  const getPendingRedemptions = () => redeemedRewards.filter((ur) => ur.status === 'REDEEMED');
-  const getCompletedRedemptions = () => redeemedRewards.filter((ur) => ur.status === 'COMPLETED');
+  // Helpers - Use pendingCompletions for parent view (has user info)
+  // Use redeemedRewards for child view
+  const getPendingRedemptions = () => {
+    // For parents - use the dedicated endpoint that includes user info
+    if (pendingCompletions.length > 0) {
+      return pendingCompletions;
+    }
+    // Fallback to filtering redeemed rewards
+    return redeemedRewards.filter((ur) => ur.status === 'REDEEMED');
+  };
+
+  const getCompletedRedemptions = () => {
+    return redeemedRewards.filter((ur) => ur.status === 'COMPLETED');
+  };
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ['rewards'] });
     queryClient.invalidateQueries({ queryKey: ['redeemed-rewards'] });
+    queryClient.invalidateQueries({ queryKey: ['pending-completions'] });
   };
 
   return {
     rewards,
     redeemedRewards,
-    loading: loadingRewards || loadingRedeemed,
+    pendingCompletions,
+    loading: loadingRewards || loadingRedeemed || loadingPending,
     error: rewardsError ? (rewardsError as Error).message : null,
     createReward: createReward.mutateAsync,
     redeemReward: redeemReward.mutateAsync,
     deleteReward: deleteReward.mutateAsync,
     completeReward: completeReward.mutateAsync,
-    getAvailableRewards,
-    getUnavailableRewards,
     getPendingRedemptions,
     getCompletedRedemptions,
     refresh,
