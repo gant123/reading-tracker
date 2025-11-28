@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Sparkles,
   Users,
+  Tablet,
 } from 'lucide-react';
 
 import Link from 'next/link';
@@ -32,6 +33,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: '/parent/children', label: 'Children', icon: Users },
     { href: '/parent/books', label: 'Books', icon: BookOpen },
     { href: '/parent/rewards', label: 'Rewards', icon: Gift },
+      { href: '/parent/devices', label: 'Devices', icon: Tablet, highlight: true }, // NEW!
   ];
 
   const links = role === 'PARENT' ? parentLinks : childLinks;
