@@ -8,7 +8,7 @@ import {
 
 interface Device {
   id: string;
-  deviceName: string;
+  name: string;
   childId: string;
   childName: string;
   lastUsed: string | null;
@@ -29,7 +29,7 @@ export default function DevicesPage() {
   const [newToken, setNewToken] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     childId: '',
-    deviceName: '',
+    name: '',
   });
   const [submitting, setSubmitting] = useState(false);
   const [copiedToken, setCopiedToken] = useState(false);
@@ -62,7 +62,7 @@ export default function DevicesPage() {
 
   const handleAddDevice = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.childId || !formData.deviceName) return;
+    if (!formData.childId || !formData.name) return;
 
     setSubmitting(true);
     try {
@@ -76,7 +76,7 @@ export default function DevicesPage() {
         const data = await res.json();
         setNewToken(data.token);
         fetchData();
-        setFormData({ childId: '', deviceName: '' });
+        setFormData({ childId: '', name: '' });
       } else {
         const error = await res.json();
         alert(error.error || 'Failed to register device');
@@ -223,8 +223,8 @@ export default function DevicesPage() {
               </label>
               <input
                 type="text"
-                value={formData.deviceName}
-                onChange={(e) => setFormData({ ...formData, deviceName: e.target.value })}
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
                 placeholder="e.g., Sarah's reMarkable"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -278,7 +278,7 @@ export default function DevicesPage() {
                     }`} />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">{device.deviceName}</h3>
+                    <h3 className="font-bold text-gray-900">{device.name}</h3>
                     <p className="text-sm text-gray-500 flex items-center gap-1">
                       <User className="w-3 h-3" />
                       {device.childName}
