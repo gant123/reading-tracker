@@ -247,6 +247,7 @@ export const DeviceTokenScalarFieldEnum = {
   token: 'token',
   name: 'name',
   userId: 'userId',
+  lastUsedAt: 'lastUsedAt',
   createdAt: 'createdAt'
 } as const
 

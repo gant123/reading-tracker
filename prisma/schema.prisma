@@ -252,6 +252,7 @@ model DeviceToken {
   name      String // e.g. "Dad's reMarkable"
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastUsedAt DateTime?
   createdAt DateTime @default(now())
 }
 

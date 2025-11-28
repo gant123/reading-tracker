@@ -29,6 +29,7 @@ export type DeviceTokenMinAggregateOutputType = {
   token: string | null
   name: string | null
   userId: string | null
+  lastUsedAt: Date | null
   createdAt: Date | null
 }
 
@@ -37,6 +38,7 @@ export type DeviceTokenMaxAggregateOutputType = {
   token: string | null
   name: string | null
   userId: string | null
+  lastUsedAt: Date | null
   createdAt: Date | null
 }
 
@@ -45,6 +47,7 @@ export type DeviceTokenCountAggregateOutputType = {
   token: number
   name: number
   userId: number
+  lastUsedAt: number
   createdAt: number
   _all: number
 }
@@ -55,6 +58,7 @@ export type DeviceTokenMinAggregateInputType = {
   token?: true
   name?: true
   userId?: true
+  lastUsedAt?: true
   createdAt?: true
 }
 
@@ -63,6 +67,7 @@ export type DeviceTokenMaxAggregateInputType = {
   token?: true
   name?: true
   userId?: true
+  lastUsedAt?: true
   createdAt?: true
 }
 
@@ -71,6 +76,7 @@ export type DeviceTokenCountAggregateInputType = {
   token?: true
   name?: true
   userId?: true
+  lastUsedAt?: true
   createdAt?: true
   _all?: true
 }
@@ -152,6 +158,7 @@ export type DeviceTokenGroupByOutputType = {
   token: string
   name: string
   userId: string
+  lastUsedAt: Date | null
   createdAt: Date
   _count: DeviceTokenCountAggregateOutputType | null
   _min: DeviceTokenMinAggregateOutputType | null
@@ -181,6 +188,7 @@ export type DeviceTokenWhereInput = {
   token?: Prisma.StringFilter<"DeviceToken"> | string
   name?: Prisma.StringFilter<"DeviceToken"> | string
   userId?: Prisma.StringFilter<"DeviceToken"> | string
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"DeviceToken"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DeviceToken"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -190,6 +198,7 @@ export type DeviceTokenOrderByWithRelationInput = {
   token?: Prisma.SortOrder
   name?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -202,6 +211,7 @@ export type DeviceTokenWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DeviceTokenWhereInput | Prisma.DeviceTokenWhereInput[]
   name?: Prisma.StringFilter<"DeviceToken"> | string
   userId?: Prisma.StringFilter<"DeviceToken"> | string
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"DeviceToken"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DeviceToken"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "token">
@@ -211,6 +221,7 @@ export type DeviceTokenOrderByWithAggregationInput = {
   token?: Prisma.SortOrder
   name?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DeviceTokenCountOrderByAggregateInput
   _max?: Prisma.DeviceTokenMaxOrderByAggregateInput
@@ -225,6 +236,7 @@ export type DeviceTokenScalarWhereWithAggregatesInput = {
   token?: Prisma.StringWithAggregatesFilter<"DeviceToken"> | string
   name?: Prisma.StringWithAggregatesFilter<"DeviceToken"> | string
   userId?: Prisma.StringWithAggregatesFilter<"DeviceToken"> | string
+  lastUsedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DeviceToken"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DeviceToken"> | Date | string
 }
 
@@ -232,6 +244,7 @@ export type DeviceTokenCreateInput = {
   id?: string
   token: string
   name: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDeviceTokensInput
 }
@@ -241,6 +254,7 @@ export type DeviceTokenUncheckedCreateInput = {
   token: string
   name: string
   userId: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -248,6 +262,7 @@ export type DeviceTokenUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDeviceTokensNestedInput
 }
@@ -257,6 +272,7 @@ export type DeviceTokenUncheckedUpdateInput = {
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -265,6 +281,7 @@ export type DeviceTokenCreateManyInput = {
   token: string
   name: string
   userId: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -272,6 +289,7 @@ export type DeviceTokenUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -280,6 +298,7 @@ export type DeviceTokenUncheckedUpdateManyInput = {
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -298,6 +317,7 @@ export type DeviceTokenCountOrderByAggregateInput = {
   token?: Prisma.SortOrder
   name?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -306,6 +326,7 @@ export type DeviceTokenMaxOrderByAggregateInput = {
   token?: Prisma.SortOrder
   name?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -314,6 +335,7 @@ export type DeviceTokenMinOrderByAggregateInput = {
   token?: Prisma.SortOrder
   name?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  lastUsedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -363,6 +385,7 @@ export type DeviceTokenCreateWithoutUserInput = {
   id?: string
   token: string
   name: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -370,6 +393,7 @@ export type DeviceTokenUncheckedCreateWithoutUserInput = {
   id?: string
   token: string
   name: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -407,6 +431,7 @@ export type DeviceTokenScalarWhereInput = {
   token?: Prisma.StringFilter<"DeviceToken"> | string
   name?: Prisma.StringFilter<"DeviceToken"> | string
   userId?: Prisma.StringFilter<"DeviceToken"> | string
+  lastUsedAt?: Prisma.DateTimeNullableFilter<"DeviceToken"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DeviceToken"> | Date | string
 }
 
@@ -414,6 +439,7 @@ export type DeviceTokenCreateManyUserInput = {
   id?: string
   token: string
   name: string
+  lastUsedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -421,6 +447,7 @@ export type DeviceTokenUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -428,6 +455,7 @@ export type DeviceTokenUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -435,6 +463,7 @@ export type DeviceTokenUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   token?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  lastUsedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -445,6 +474,7 @@ export type DeviceTokenSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   token?: boolean
   name?: boolean
   userId?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deviceToken"]>
@@ -454,6 +484,7 @@ export type DeviceTokenSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   token?: boolean
   name?: boolean
   userId?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deviceToken"]>
@@ -463,6 +494,7 @@ export type DeviceTokenSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   token?: boolean
   name?: boolean
   userId?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deviceToken"]>
@@ -472,10 +504,11 @@ export type DeviceTokenSelectScalar = {
   token?: boolean
   name?: boolean
   userId?: boolean
+  lastUsedAt?: boolean
   createdAt?: boolean
 }
 
-export type DeviceTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "name" | "userId" | "createdAt", ExtArgs["result"]["deviceToken"]>
+export type DeviceTokenOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "token" | "name" | "userId" | "lastUsedAt" | "createdAt", ExtArgs["result"]["deviceToken"]>
 export type DeviceTokenInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -496,6 +529,7 @@ export type $DeviceTokenPayload<ExtArgs extends runtime.Types.Extensions.Interna
     token: string
     name: string
     userId: string
+    lastUsedAt: Date | null
     createdAt: Date
   }, ExtArgs["result"]["deviceToken"]>
   composites: {}
@@ -925,6 +959,7 @@ export interface DeviceTokenFieldRefs {
   readonly token: Prisma.FieldRef<"DeviceToken", 'String'>
   readonly name: Prisma.FieldRef<"DeviceToken", 'String'>
   readonly userId: Prisma.FieldRef<"DeviceToken", 'String'>
+  readonly lastUsedAt: Prisma.FieldRef<"DeviceToken", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DeviceToken", 'DateTime'>
 }
     
