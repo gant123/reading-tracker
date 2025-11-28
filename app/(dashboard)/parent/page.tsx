@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { Users, BookOpen, Gift, TrendingUp, Award, Clock, Star, ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import QuizActivityFeed from '@/components/books/QuizActivityFeed';
 
 export default async function ParentDashboard() {
   const session = await auth();
@@ -57,6 +58,9 @@ export default async function ParentDashboard() {
   };
 
   const totalActionItems = pendingBooks + pendingRedemptions;
+
+  // Get child IDs for QuizActivityFeed
+  const childIds = children.map(c => c.id);
 
   const getAvatarUrl = (child: any) => {
     const seed = child.avatarSeed || child.name;
@@ -194,75 +198,77 @@ export default async function ParentDashboard() {
         </Link>
       </div>
 
-      {/* Children Overview */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="font-bold text-lg sm:text-xl text-gray-900 flex items-center gap-2">
-            <Users className="w-5 h-5 text-purple-500" />
-            Your Children
-          </h2>
-          {children.length > 0 && (
-            <Link href="/parent/children" className="text-purple-600 text-sm font-medium hover:underline">
-              View all
-            </Link>
-          )}
-        </div>
-        <div className="p-4 sm:p-5">
-          {children.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {children.map((child) => (
-                <div key={child.id} className="group bg-gray-50 rounded-xl p-4 hover:bg-gradient-to-br hover:from-purple-50 hover:to-indigo-50 hover:shadow-md border border-gray-100 hover:border-purple-200 transition-all">
-                  <div className="flex items-center gap-3 mb-4">
-                    <img
-                      src={getAvatarUrl(child)}
-                      alt={child.name}
-                      className="w-12 h-12 rounded-full ring-2 ring-white shadow"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="font-bold text-gray-900 truncate">{child.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{child.email}</p>
+      {/* Two Column Layout: Children Overview + Quiz Activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Children Overview */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between">
+            <h2 className="font-bold text-lg sm:text-xl text-gray-900 flex items-center gap-2">
+              <Users className="w-5 h-5 text-purple-500" />
+              Your Children
+            </h2>
+            {children.length > 0 && (
+              <Link href="/parent/children" className="text-purple-600 text-sm font-medium hover:underline">
+                View all
+              </Link>
+            )}
+          </div>
+          <div className="p-4 sm:p-5">
+            {children.length > 0 ? (
+              <div className="space-y-3">
+                {children.map((child) => (
+                  <div key={child.id} className="group bg-gray-50 rounded-xl p-4 hover:bg-gradient-to-br hover:from-purple-50 hover:to-indigo-50 hover:shadow-md border border-gray-100 hover:border-purple-200 transition-all">
+                    <div className="flex items-center gap-3 mb-3">
+                      <img
+                        src={getAvatarUrl(child)}
+                        alt={child.name}
+                        className="w-10 h-10 rounded-full ring-2 ring-white shadow"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-gray-900 truncate text-sm">{child.name}</p>
+                        <p className="text-xs text-gray-500 truncate">{child.email}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-4 gap-2 text-xs">
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-amber-500" />
+                        <span className="font-semibold">{child.points}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-blue-500" />
+                        <span className="font-semibold">{child.totalMinutes}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-orange-500">🔥</span>
+                        <span className="font-semibold">{child.streakDays}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="w-3 h-3 text-emerald-500" />
+                        <span className="font-semibold">{child.books.length}</span>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-amber-500" />
-                      <span className="font-semibold">{child.points}</span>
-                      <span className="text-gray-500 text-xs">pts</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-blue-500" />
-                      <span className="font-semibold">{child.totalMinutes}</span>
-                      <span className="text-gray-500 text-xs">min</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-orange-500">🔥</span>
-                      <span className="font-semibold">{child.streakDays}</span>
-                      <span className="text-gray-500 text-xs">days</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-emerald-500" />
-                      <span className="font-semibold">{child.books.length}</span>
-                      <span className="text-gray-500 text-xs">books</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 sm:py-12">
-              <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No Children Linked Yet</h3>
-              <p className="text-gray-600 mb-4 max-w-md mx-auto">
-                Have your children create accounts using your email as the parent email to link their accounts.
-              </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 max-w-sm mx-auto">
-                <p className="text-sm text-blue-900 font-medium mb-1">📧 Your Email:</p>
-                <p className="text-sm text-blue-700 font-mono break-all">{session.user.email}</p>
+                ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-8">
+                <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                <h3 className="text-lg font-bold text-gray-900 mb-2">No Children Linked Yet</h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  Have your children create accounts using your email as the parent email.
+                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3">
+                  <p className="text-xs text-blue-900 font-medium mb-1">📧 Your Email:</p>
+                  <p className="text-xs text-blue-700 font-mono break-all">{session.user.email}</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Quiz Activity Feed */}
+        <QuizActivityFeed childIds={childIds} limit={5} />
       </div>
 
       {/* Tips */}
@@ -276,7 +282,7 @@ export default async function ParentDashboard() {
             { emoji: '📚', text: 'Review book requests regularly to keep kids engaged' },
             { emoji: '🎁', text: 'Create meaningful rewards to motivate reading' },
             { emoji: '🔥', text: 'Encourage daily reading to build streaks' },
-            { emoji: '🏆', text: 'Celebrate achievements together!' },
+            { emoji: '🏆', text: 'Celebrate quiz successes together!' },
           ].map((tip, i) => (
             <div key={i} className="flex items-start gap-3 bg-white/60 rounded-xl p-3">
               <span className="text-lg">{tip.emoji}</span>

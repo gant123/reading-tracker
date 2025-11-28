@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -266,6 +266,7 @@ export type BookWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Book"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sessions?: Prisma.ReadingSessionListRelationFilter
+  quizAttempts?: Prisma.QuizAttemptListRelationFilter
 }
 
 export type BookOrderByWithRelationInput = {
@@ -282,6 +283,7 @@ export type BookOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   sessions?: Prisma.ReadingSessionOrderByRelationAggregateInput
+  quizAttempts?: Prisma.QuizAttemptOrderByRelationAggregateInput
 }
 
 export type BookWhereUniqueInput = Prisma.AtLeast<{
@@ -301,6 +303,7 @@ export type BookWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Book"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   sessions?: Prisma.ReadingSessionListRelationFilter
+  quizAttempts?: Prisma.QuizAttemptListRelationFilter
 }, "id">
 
 export type BookOrderByWithAggregationInput = {
@@ -352,6 +355,7 @@ export type BookCreateInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutBooksInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutBookInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateInput = {
@@ -367,6 +371,7 @@ export type BookUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutBookInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookUpdateInput = {
@@ -382,6 +387,7 @@ export type BookUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutBooksNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutBookNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateInput = {
@@ -397,6 +403,7 @@ export type BookUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutBookNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookCreateManyInput = {
@@ -573,6 +580,20 @@ export type BookUpdateOneRequiredWithoutSessionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutSessionsInput, Prisma.BookUpdateWithoutSessionsInput>, Prisma.BookUncheckedUpdateWithoutSessionsInput>
 }
 
+export type BookCreateNestedOneWithoutQuizAttemptsInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutQuizAttemptsInput, Prisma.BookUncheckedCreateWithoutQuizAttemptsInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutQuizAttemptsInput
+  connect?: Prisma.BookWhereUniqueInput
+}
+
+export type BookUpdateOneRequiredWithoutQuizAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutQuizAttemptsInput, Prisma.BookUncheckedCreateWithoutQuizAttemptsInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutQuizAttemptsInput
+  upsert?: Prisma.BookUpsertWithoutQuizAttemptsInput
+  connect?: Prisma.BookWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutQuizAttemptsInput, Prisma.BookUpdateWithoutQuizAttemptsInput>, Prisma.BookUncheckedUpdateWithoutQuizAttemptsInput>
+}
+
 export type BookCreateWithoutUserInput = {
   id?: string
   title: string
@@ -585,6 +606,7 @@ export type BookCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutBookInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateWithoutUserInput = {
@@ -599,6 +621,7 @@ export type BookUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutBookInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookCreateOrConnectWithoutUserInput = {
@@ -656,6 +679,7 @@ export type BookCreateWithoutSessionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutBooksInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateWithoutSessionsInput = {
@@ -670,6 +694,7 @@ export type BookUncheckedCreateWithoutSessionsInput = {
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookCreateOrConnectWithoutSessionsInput = {
@@ -700,6 +725,7 @@ export type BookUpdateWithoutSessionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutBooksNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateWithoutSessionsInput = {
@@ -714,6 +740,83 @@ export type BookUncheckedUpdateWithoutSessionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutBookNestedInput
+}
+
+export type BookCreateWithoutQuizAttemptsInput = {
+  id?: string
+  title: string
+  author: string
+  coverUrl?: string | null
+  googleBooksId?: string | null
+  pageCount?: number | null
+  description?: string | null
+  status?: $Enums.BookStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutBooksInput
+  sessions?: Prisma.ReadingSessionCreateNestedManyWithoutBookInput
+}
+
+export type BookUncheckedCreateWithoutQuizAttemptsInput = {
+  id?: string
+  title: string
+  author: string
+  coverUrl?: string | null
+  googleBooksId?: string | null
+  pageCount?: number | null
+  description?: string | null
+  status?: $Enums.BookStatus
+  userId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutBookInput
+}
+
+export type BookCreateOrConnectWithoutQuizAttemptsInput = {
+  where: Prisma.BookWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookCreateWithoutQuizAttemptsInput, Prisma.BookUncheckedCreateWithoutQuizAttemptsInput>
+}
+
+export type BookUpsertWithoutQuizAttemptsInput = {
+  update: Prisma.XOR<Prisma.BookUpdateWithoutQuizAttemptsInput, Prisma.BookUncheckedUpdateWithoutQuizAttemptsInput>
+  create: Prisma.XOR<Prisma.BookCreateWithoutQuizAttemptsInput, Prisma.BookUncheckedCreateWithoutQuizAttemptsInput>
+  where?: Prisma.BookWhereInput
+}
+
+export type BookUpdateToOneWithWhereWithoutQuizAttemptsInput = {
+  where?: Prisma.BookWhereInput
+  data: Prisma.XOR<Prisma.BookUpdateWithoutQuizAttemptsInput, Prisma.BookUncheckedUpdateWithoutQuizAttemptsInput>
+}
+
+export type BookUpdateWithoutQuizAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.StringFieldUpdateOperationsInput | string
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleBooksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBookStatusFieldUpdateOperationsInput | $Enums.BookStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutBooksNestedInput
+  sessions?: Prisma.ReadingSessionUpdateManyWithoutBookNestedInput
+}
+
+export type BookUncheckedUpdateWithoutQuizAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  author?: Prisma.StringFieldUpdateOperationsInput | string
+  coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleBooksId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBookStatusFieldUpdateOperationsInput | $Enums.BookStatus
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookCreateManyUserInput = {
@@ -741,6 +844,7 @@ export type BookUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ReadingSessionUpdateManyWithoutBookNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateWithoutUserInput = {
@@ -755,6 +859,7 @@ export type BookUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutBookNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateManyWithoutUserInput = {
@@ -777,10 +882,12 @@ export type BookUncheckedUpdateManyWithoutUserInput = {
 
 export type BookCountOutputType = {
   sessions: number
+  quizAttempts: number
 }
 
 export type BookCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | BookCountOutputTypeCountSessionsArgs
+  quizAttempts?: boolean | BookCountOutputTypeCountQuizAttemptsArgs
 }
 
 /**
@@ -800,6 +907,13 @@ export type BookCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ReadingSessionWhereInput
 }
 
+/**
+ * BookCountOutputType without action
+ */
+export type BookCountOutputTypeCountQuizAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuizAttemptWhereInput
+}
+
 
 export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -815,6 +929,7 @@ export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Book$sessionsArgs<ExtArgs>
+  quizAttempts?: boolean | Prisma.Book$quizAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["book"]>
 
@@ -866,6 +981,7 @@ export type BookOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type BookInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   sessions?: boolean | Prisma.Book$sessionsArgs<ExtArgs>
+  quizAttempts?: boolean | Prisma.Book$quizAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BookIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -880,6 +996,7 @@ export type $BookPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     sessions: Prisma.$ReadingSessionPayload<ExtArgs>[]
+    quizAttempts: Prisma.$QuizAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1289,6 +1406,7 @@ export interface Prisma__BookClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.Book$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReadingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quizAttempts<T extends Prisma.Book$quizAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$quizAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1746,6 +1864,30 @@ export type Book$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ReadingSessionScalarFieldEnum | Prisma.ReadingSessionScalarFieldEnum[]
+}
+
+/**
+ * Book.quizAttempts
+ */
+export type Book$quizAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuizAttempt
+   */
+  select?: Prisma.QuizAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuizAttempt
+   */
+  omit?: Prisma.QuizAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuizAttemptInclude<ExtArgs> | null
+  where?: Prisma.QuizAttemptWhereInput
+  orderBy?: Prisma.QuizAttemptOrderByWithRelationInput | Prisma.QuizAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.QuizAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuizAttemptScalarFieldEnum | Prisma.QuizAttemptScalarFieldEnum[]
 }
 
 /**

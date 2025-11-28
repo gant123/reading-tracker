@@ -62,3 +62,13 @@ export type Reward = Prisma.RewardModel
  * 
  */
 export type UserReward = Prisma.UserRewardModel
+/**
+ * Model QuizAttempt
+ * 
+ */
+export type QuizAttempt = Prisma.QuizAttemptModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel

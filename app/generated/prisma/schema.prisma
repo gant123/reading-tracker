@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  PARENT
+  CHILD
+}
+
+enum BookStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RewardStatus {
+  AVAILABLE
+  REDEEMED
+  COMPLETED
+}
+
+model User {
+  id          String @id @default(cuid())
+  email       String @unique
+  password    String
+  name        String
+  role        Role
+  avatarColor String @default("#3B82F6")
+
+  // --- New Avatar Fields ---
+  avatarStyle       String   @default("adventurer")
+  avatarSeed        String?
+  avatarAccessories String[] @default([]) // Maps to TEXT[] DEFAULT ARRAY[]::TEXT[]
+  // -------------------------
+
+  parentId String?
+  parent   User?   @relation("ParentChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children User[]  @relation("ParentChildren")
+
+  books        Book[]
+  sessions     ReadingSession[]
+  points       Int              @default(0)
+  totalMinutes Int              @default(0)
+  streakDays   Int              @default(0)
+  lastReadDate DateTime?
+
+  achievements  UserAchievement[]
+  rewards       UserReward[]
+  quizAttempts  QuizAttempt[]
+  notifications Notification[]
+  // --- New Relation ---
+  avatarItems   UserAvatarItem[]
+  // --------------------
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([parentId])
+}
+
+// --- New Model: AvatarItem ---
+model AvatarItem {
+  id         String   @id @default(cuid())
+  name       String
+  type       String
+  value      String
+  style      String
+  pointsCost Int
+  icon       String
+  rarity     String   @default("common")
+  createdAt  DateTime @default(now())
+
+  users UserAvatarItem[]
+
+  // Matches: CREATE UNIQUE INDEX "AvatarItem_style_type_value_key"
+  @@unique([style, type, value])
+}
+
+// --- New Model: UserAvatarItem ---
+model UserAvatarItem {
+  id          String   @id @default(cuid())
+  userId      String
+  itemId      String
+  purchasedAt DateTime @default(now())
+  equipped    Boolean  @default(false)
+
+  // Relations with Cascade Delete as requested in SQL
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item AvatarItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  // Matches: CREATE UNIQUE INDEX "UserAvatarItem_userId_itemId_key"
+  @@unique([userId, itemId])
+  // Matches: CREATE INDEX "UserAvatarItem_userId_idx"
+  @@index([userId])
+}
+
+model Book {
+  id            String     @id @default(cuid())
+  title         String
+  author        String
+  coverUrl      String?
+  googleBooksId String?
+  pageCount     Int?
+  description   String?
+  status        BookStatus @default(PENDING)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sessions     ReadingSession[]
+  quizAttempts QuizAttempt[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ReadingSession {
+  id              String   @id @default(cuid())
+  startTime       DateTime
+  endTime         DateTime
+  durationMinutes Int
+  notes           String?
+  verified        Boolean  @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  pointsEarned Int
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([bookId])
+  @@index([startTime])
+}
+
+model Achievement {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String
+  icon        String
+  requirement Int
+  type        String
+
+  users UserAchievement[]
+
+  createdAt DateTime @default(now())
+}
+
+model UserAchievement {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  earnedAt DateTime @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model Reward {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  pointsCost  Int
+  icon        String
+
+  parentId String
+
+  users UserReward[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([parentId])
+}
+
+model UserReward {
+  id     String       @id @default(cuid())
+  status RewardStatus @default(AVAILABLE)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rewardId String
+  reward   Reward @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+
+  redeemedAt  DateTime?
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+}
+
+model QuizAttempt {
+  id             String    @id @default(cuid())
+  userId         String // The child who took the quiz
+  bookId         String // The book the quiz was about
+  score          Int // Number of correct answers (0-3)
+  totalQuestions Int       @default(3) // Total questions in quiz
+  passed         Boolean // true if perfect score (3/3)
+  pointsEarned   Int       @default(0) // 50 if passed, 0 if failed
+  attemptedAt    DateTime  @default(now())
+  canRetryAt     DateTime? // null if passed (locked forever), timestamp if failed
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([bookId])
+  @@index([userId, bookId]) // For quick lookup of user's quiz status on a book
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String // The user who receives the notification (parent)
+  type      String // 'QUIZ_PASSED', 'QUIZ_FAILED', 'BOOK_APPROVED', etc.
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  data      Json? // Optional extra data (childId, bookId, score, etc.)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, read]) // For fetching unread notifications
+}

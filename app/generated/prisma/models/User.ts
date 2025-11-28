@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -314,6 +314,8 @@ export type UserWhereInput = {
   sessions?: Prisma.ReadingSessionListRelationFilter
   achievements?: Prisma.UserAchievementListRelationFilter
   rewards?: Prisma.UserRewardListRelationFilter
+  quizAttempts?: Prisma.QuizAttemptListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   avatarItems?: Prisma.UserAvatarItemListRelationFilter
 }
 
@@ -340,6 +342,8 @@ export type UserOrderByWithRelationInput = {
   sessions?: Prisma.ReadingSessionOrderByRelationAggregateInput
   achievements?: Prisma.UserAchievementOrderByRelationAggregateInput
   rewards?: Prisma.UserRewardOrderByRelationAggregateInput
+  quizAttempts?: Prisma.QuizAttemptOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
   avatarItems?: Prisma.UserAvatarItemOrderByRelationAggregateInput
 }
 
@@ -369,6 +373,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sessions?: Prisma.ReadingSessionListRelationFilter
   achievements?: Prisma.UserAchievementListRelationFilter
   rewards?: Prisma.UserRewardListRelationFilter
+  quizAttempts?: Prisma.QuizAttemptListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   avatarItems?: Prisma.UserAvatarItemListRelationFilter
 }, "id" | "email">
 
@@ -440,6 +446,8 @@ export type UserCreateInput = {
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -465,6 +473,8 @@ export type UserUncheckedCreateInput = {
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -490,6 +500,8 @@ export type UserUpdateInput = {
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -515,6 +527,8 @@ export type UserUncheckedUpdateInput = {
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -834,6 +848,34 @@ export type UserUpdateOneRequiredWithoutRewardsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRewardsInput, Prisma.UserUpdateWithoutRewardsInput>, Prisma.UserUncheckedUpdateWithoutRewardsInput>
 }
 
+export type UserCreateNestedOneWithoutQuizAttemptsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuizAttemptsInput, Prisma.UserUncheckedCreateWithoutQuizAttemptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuizAttemptsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQuizAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQuizAttemptsInput, Prisma.UserUncheckedCreateWithoutQuizAttemptsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQuizAttemptsInput
+  upsert?: Prisma.UserUpsertWithoutQuizAttemptsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQuizAttemptsInput, Prisma.UserUpdateWithoutQuizAttemptsInput>, Prisma.UserUncheckedUpdateWithoutQuizAttemptsInput>
+}
+
+export type UserCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.UserUpsertWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type UserCreateWithoutChildrenInput = {
   id?: string
   email: string
@@ -855,6 +897,8 @@ export type UserCreateWithoutChildrenInput = {
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -879,6 +923,8 @@ export type UserUncheckedCreateWithoutChildrenInput = {
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -908,6 +954,8 @@ export type UserCreateWithoutParentInput = {
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -932,6 +980,8 @@ export type UserUncheckedCreateWithoutParentInput = {
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -977,6 +1027,8 @@ export type UserUpdateWithoutChildrenInput = {
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1001,6 +1053,8 @@ export type UserUncheckedUpdateWithoutChildrenInput = {
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1064,6 +1118,8 @@ export type UserCreateWithoutAvatarItemsInput = {
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAvatarItemsInput = {
@@ -1088,6 +1144,8 @@ export type UserUncheckedCreateWithoutAvatarItemsInput = {
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAvatarItemsInput = {
@@ -1128,6 +1186,8 @@ export type UserUpdateWithoutAvatarItemsInput = {
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAvatarItemsInput = {
@@ -1152,6 +1212,8 @@ export type UserUncheckedUpdateWithoutAvatarItemsInput = {
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBooksInput = {
@@ -1175,6 +1237,8 @@ export type UserCreateWithoutBooksInput = {
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -1199,6 +1263,8 @@ export type UserUncheckedCreateWithoutBooksInput = {
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1239,6 +1305,8 @@ export type UserUpdateWithoutBooksInput = {
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1263,6 +1331,8 @@ export type UserUncheckedUpdateWithoutBooksInput = {
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1287,6 +1357,8 @@ export type UserCreateWithoutSessionsInput = {
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -1311,6 +1383,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1351,6 +1425,8 @@ export type UserUpdateWithoutSessionsInput = {
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1375,6 +1451,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1399,6 +1477,8 @@ export type UserCreateWithoutAchievementsInput = {
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -1423,6 +1503,8 @@ export type UserUncheckedCreateWithoutAchievementsInput = {
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1463,6 +1545,8 @@ export type UserUpdateWithoutAchievementsInput = {
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1487,6 +1571,8 @@ export type UserUncheckedUpdateWithoutAchievementsInput = {
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1511,6 +1597,8 @@ export type UserCreateWithoutRewardsInput = {
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
 }
 
@@ -1535,6 +1623,8 @@ export type UserUncheckedCreateWithoutRewardsInput = {
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1575,6 +1665,8 @@ export type UserUpdateWithoutRewardsInput = {
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1599,6 +1691,248 @@ export type UserUncheckedUpdateWithoutRewardsInput = {
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutQuizAttemptsInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
+  children?: Prisma.UserCreateNestedManyWithoutParentInput
+  books?: Prisma.BookCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutQuizAttemptsInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  parentId?: string | null
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutQuizAttemptsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuizAttemptsInput, Prisma.UserUncheckedCreateWithoutQuizAttemptsInput>
+}
+
+export type UserUpsertWithoutQuizAttemptsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQuizAttemptsInput, Prisma.UserUncheckedUpdateWithoutQuizAttemptsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQuizAttemptsInput, Prisma.UserUncheckedCreateWithoutQuizAttemptsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQuizAttemptsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQuizAttemptsInput, Prisma.UserUncheckedUpdateWithoutQuizAttemptsInput>
+}
+
+export type UserUpdateWithoutQuizAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  books?: Prisma.BookUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQuizAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutNotificationsInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
+  children?: Prisma.UserCreateNestedManyWithoutParentInput
+  books?: Prisma.BookCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  parentId?: string | null
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+}
+
+export type UserUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  books?: Prisma.BookUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1641,6 +1975,8 @@ export type UserUpdateWithoutParentInput = {
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
 }
 
@@ -1665,6 +2001,8 @@ export type UserUncheckedUpdateWithoutParentInput = {
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1697,6 +2035,8 @@ export type UserCountOutputType = {
   sessions: number
   achievements: number
   rewards: number
+  quizAttempts: number
+  notifications: number
   avatarItems: number
 }
 
@@ -1706,6 +2046,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   achievements?: boolean | UserCountOutputTypeCountAchievementsArgs
   rewards?: boolean | UserCountOutputTypeCountRewardsArgs
+  quizAttempts?: boolean | UserCountOutputTypeCountQuizAttemptsArgs
+  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   avatarItems?: boolean | UserCountOutputTypeCountAvatarItemsArgs
 }
 
@@ -1757,6 +2099,20 @@ export type UserCountOutputTypeCountRewardsArgs<ExtArgs extends runtime.Types.Ex
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountQuizAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QuizAttemptWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountAvatarItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserAvatarItemWhereInput
 }
@@ -1785,6 +2141,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
   rewards?: boolean | Prisma.User$rewardsArgs<ExtArgs>
+  quizAttempts?: boolean | Prisma.User$quizAttemptsArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   avatarItems?: boolean | Prisma.User$avatarItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1856,6 +2214,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
   rewards?: boolean | Prisma.User$rewardsArgs<ExtArgs>
+  quizAttempts?: boolean | Prisma.User$quizAttemptsArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   avatarItems?: boolean | Prisma.User$avatarItemsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1875,6 +2235,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sessions: Prisma.$ReadingSessionPayload<ExtArgs>[]
     achievements: Prisma.$UserAchievementPayload<ExtArgs>[]
     rewards: Prisma.$UserRewardPayload<ExtArgs>[]
+    quizAttempts: Prisma.$QuizAttemptPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
     avatarItems: Prisma.$UserAvatarItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2294,6 +2656,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReadingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   achievements<T extends Prisma.User$achievementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   rewards<T extends Prisma.User$rewardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rewardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRewardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  quizAttempts<T extends Prisma.User$quizAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$quizAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   avatarItems<T extends Prisma.User$avatarItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$avatarItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAvatarItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2872,6 +3236,54 @@ export type User$rewardsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.UserRewardScalarFieldEnum | Prisma.UserRewardScalarFieldEnum[]
+}
+
+/**
+ * User.quizAttempts
+ */
+export type User$quizAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuizAttempt
+   */
+  select?: Prisma.QuizAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuizAttempt
+   */
+  omit?: Prisma.QuizAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuizAttemptInclude<ExtArgs> | null
+  where?: Prisma.QuizAttemptWhereInput
+  orderBy?: Prisma.QuizAttemptOrderByWithRelationInput | Prisma.QuizAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.QuizAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QuizAttemptScalarFieldEnum | Prisma.QuizAttemptScalarFieldEnum[]
+}
+
+/**
+ * User.notifications
+ */
+export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**

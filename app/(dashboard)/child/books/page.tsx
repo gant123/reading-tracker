@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpen, Plus, Search, X, Check, Clock, AlertCircle } from 'lucide-react';
+import { BookOpen, Plus, Search, X, Check, Clock, AlertCircle, HelpCircle } from 'lucide-react';
 import { useBooks } from '@/hooks/useBooks';
-//
-import { BookQuiz } from '@/components/books/BookQuiz'; 
+import BookQuiz from '@/components/books/BookQuiz'; 
+import QuizStatusBadge from '@/components/books/QuizStatusBadge';
 
 export default function ChildBooksPage() {
   const { books, loading, addBook, searchBooks } = useBooks();
@@ -13,6 +13,9 @@ export default function ChildBooksPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  
+  // Quiz modal state
+  const [quizBook, setQuizBook] = useState<{ id: string; title: string } | null>(null);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +42,14 @@ export default function ChildBooksPage() {
     } catch (error) {
       console.error('Failed to add book:', error);
       alert('Failed to add book');
+    }
+  };
+
+  const handleQuizComplete = (passed: boolean, pointsEarned: number) => {
+    // Optionally refresh data or show a toast
+    if (passed) {
+      // Could trigger a refresh of user points here
+      console.log(`Quiz passed! Earned ${pointsEarned} points`);
     }
   };
 
@@ -208,14 +219,24 @@ export default function ChildBooksPage() {
                   <h3 className="font-semibold text-gray-900 line-clamp-2 text-sm sm:text-base">{book.title}</h3>
                   <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-1">{book.author}</p>
                   {book.pageCount && (
-                    <p className="text-gray-400 text-xs mt-2 mb-2">{book.pageCount} pages</p>
+                    <p className="text-gray-400 text-xs mt-2">{book.pageCount} pages</p>
                   )}
                   
-                  {/* ADDED BOOK QUIZ BUTTON HERE */}
-                  <div className="mt-auto pt-3">
-                     <BookQuiz title={book.title} author={book.author} />
+                  {/* Quiz Status Badge */}
+                  <div className="mt-2">
+                    <QuizStatusBadge bookId={book.id} compact />
                   </div>
-
+                  
+                  {/* Take Quiz Button */}
+                  <div className="mt-auto pt-3">
+                    <button
+                      onClick={() => setQuizBook({ id: book.id, title: book.title })}
+                      className="w-full py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 shadow-md shadow-purple-500/20"
+                    >
+                      <HelpCircle className="w-4 h-4" />
+                      Take Quiz
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -254,6 +275,16 @@ export default function ChildBooksPage() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Quiz Modal - Only renders when quizBook is set */}
+      {quizBook && (
+        <BookQuiz
+          bookId={quizBook.id}
+          bookTitle={quizBook.title}
+          onClose={() => setQuizBook(null)}
+          onQuizComplete={handleQuizComplete}
+        />
       )}
     </div>
   );

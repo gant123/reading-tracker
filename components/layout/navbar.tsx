@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { UserMenu } from '@/components/UserMenu';
+import NotificationBell from '../notifications/NotificationBell';
 
 interface NavbarProps {
   userName?: string;
@@ -51,18 +52,20 @@ export function Navbar({
               )}
             </div>
           </Link>
-          
-          {/* User Menu Section */}
-          {userName && (
-            <UserMenu 
-              userName={userName}
-              userEmail={userEmail}
-              role={role}
-              avatarStyle={avatarStyle}
-              avatarSeed={avatarSeed}
-              avatarColor={avatarColor}
-            />
-          )}
+          <div className="flex items-center gap-2 sm:gap-4">
+             {role === 'PARENT' && <NotificationBell />}
+             {/* User Menu Section */}
+              {userName && (
+                <UserMenu 
+                  userName={userName}
+                  userEmail={userEmail}
+                  role={role}
+                  avatarStyle={avatarStyle}
+                  avatarSeed={avatarSeed}
+                  avatarColor={avatarColor}
+                />
+              )}
+          </div>
         </div>
       </div>
     </nav>

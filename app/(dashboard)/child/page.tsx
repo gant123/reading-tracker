@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
+import { prisma} from '@/lib/prisma';
 import { BookOpen, Trophy, Flame, Star, Clock, TrendingUp, Award, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 

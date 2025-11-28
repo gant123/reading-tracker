@@ -15,7 +15,7 @@
  * model files in the `model` directory!
  */
 
-import * as runtime from "@prisma/client/runtime/library"
+import * as runtime from "@prisma/client/runtime/client"
 import type * as Prisma from "../models"
 import { type PrismaClient } from "./class"
 
@@ -65,14 +65,6 @@ export type Decimal = runtime.Decimal
 export type DecimalJsLike = runtime.DecimalJsLike
 
 /**
- * Metrics
- */
-export type Metrics = runtime.Metrics
-export type Metric<T> = runtime.Metric<T>
-export type MetricHistogram = runtime.MetricHistogram
-export type MetricHistogramBucket = runtime.MetricHistogramBucket
-
-/**
 * Extensions
 */
 export type Extension = runtime.Types.Extensions.UserArgs
@@ -88,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 6.19.0
- * Query Engine version: 2ba551f319ab1df4bc874a89965d8b3641056773
+ * Prisma Client JS version: 7.0.1
+ * Query Engine version: f09f2815f091dbba658cdcd2264306d88bb5bda6
  */
 export const prismaVersion: PrismaVersion = {
-  client: "6.19.0",
-  engine: "2ba551f319ab1df4bc874a89965d8b3641056773"
+  client: "7.0.1",
+  engine: "f09f2815f091dbba658cdcd2264306d88bb5bda6"
 }
 
 /**
@@ -110,28 +102,30 @@ export type InputJsonValue = runtime.InputJsonValue
 
 
 export const NullTypes = {
-  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
-  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
-  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
+  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
+  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
+  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.objectEnumValues.instances.DbNull
+export const DbNull = runtime.DbNull
+
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.objectEnumValues.instances.JsonNull
+export const JsonNull = runtime.JsonNull
+
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.objectEnumValues.instances.AnyNull
+export const AnyNull = runtime.AnyNull
 
 
 type SelectAndInclude = {
@@ -398,7 +392,9 @@ export const ModelName = {
   Achievement: 'Achievement',
   UserAchievement: 'UserAchievement',
   Reward: 'Reward',
-  UserReward: 'UserReward'
+  UserReward: 'UserReward',
+  QuizAttempt: 'QuizAttempt',
+  Notification: 'Notification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "avatarItem" | "userAvatarItem" | "book" | "readingSession" | "achievement" | "userAchievement" | "reward" | "userReward"
+    modelProps: "user" | "avatarItem" | "userAvatarItem" | "book" | "readingSession" | "achievement" | "userAchievement" | "reward" | "userReward" | "quizAttempt" | "notification"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1084,6 +1080,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuizAttempt: {
+      payload: Prisma.$QuizAttemptPayload<ExtArgs>
+      fields: Prisma.QuizAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuizAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuizAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.QuizAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuizAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.QuizAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.QuizAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.QuizAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuizAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.QuizAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        update: {
+          args: Prisma.QuizAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuizAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuizAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuizAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuizAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuizAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.QuizAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuizAttempt>
+        }
+        groupBy: {
+          args: Prisma.QuizAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuizAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuizAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuizAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
+    Notification: {
+      payload: Prisma.$NotificationPayload<ExtArgs>
+      fields: Prisma.NotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        findMany: {
+          args: Prisma.NotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        create: {
+          args: Prisma.NotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        createMany: {
+          args: Prisma.NotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        update: {
+          args: Prisma.NotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotification>
+        }
+        groupBy: {
+          args: Prisma.NotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1254,12 +1398,49 @@ export const UserRewardScalarFieldEnum = {
 export type UserRewardScalarFieldEnum = (typeof UserRewardScalarFieldEnum)[keyof typeof UserRewardScalarFieldEnum]
 
 
+export const QuizAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bookId: 'bookId',
+  score: 'score',
+  totalQuestions: 'totalQuestions',
+  passed: 'passed',
+  pointsEarned: 'pointsEarned',
+  attemptedAt: 'attemptedAt',
+  canRetryAt: 'canRetryAt'
+} as const
+
+export type QuizAttemptScalarFieldEnum = (typeof QuizAttemptScalarFieldEnum)[keyof typeof QuizAttemptScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  read: 'read',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -1276,6 +1457,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -1376,6 +1566,20 @@ export type ListEnumRewardStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1395,26 +1599,22 @@ export type BatchPayload = {
   count: number
 }
 
-
-export type Datasource = {
-  url?: string
-}
-export type Datasources = {
-  db?: Datasource
-}
-
 export const defineExtension = runtime.Extensions.defineExtension as unknown as runtime.Types.Extensions.ExtendsHook<"define", TypeMapCb, runtime.Types.Extensions.DefaultArgs>
 export type DefaultPrismaClient = PrismaClient
 export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
-export interface PrismaClientOptions {
+export type PrismaClientOptions = ({
   /**
-   * Overwrites the datasource url from your schema.prisma file
+   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-pg`.
    */
-  datasources?: Datasources
+  adapter: runtime.SqlDriverAdapterFactory
+  accelerateUrl?: never
+} | {
   /**
-   * Overwrites the datasource url from your schema.prisma file
+   * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
    */
-  datasourceUrl?: string
+  accelerateUrl: string
+  adapter?: never
+}) & {
   /**
    * @default "colorless"
    */
@@ -1455,10 +1655,6 @@ export interface PrismaClientOptions {
     isolationLevel?: TransactionIsolationLevel
   }
   /**
-   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
-   */
-  adapter?: runtime.SqlDriverAdapterFactory | null
-  /**
    * Global configuration for omitting model fields by default.
    * 
    * @example
@@ -1484,6 +1680,8 @@ export type GlobalOmitConfig = {
   userAchievement?: Prisma.UserAchievementOmit
   reward?: Prisma.RewardOmit
   userReward?: Prisma.UserRewardOmit
+  quizAttempt?: Prisma.QuizAttemptOmit
+  notification?: Prisma.NotificationOmit
 }
 
 /* Types for Logging */

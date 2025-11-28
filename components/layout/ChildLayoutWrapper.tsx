@@ -14,7 +14,15 @@ export async function ChildLayoutWrapper({ children }: ChildLayoutWrapperProps) 
   if (!session || session.user.role !== 'CHILD') {
     redirect('/login');
   }
+// 2. LOGGING: See what is actually inside the session
+console.log("DEBUG SESSION:", session.user); 
 
+// 3. SAFETY CHECK: Ensure ID exists before querying
+if (!session.user.id) {
+  console.error("User ID is missing from session!");
+  // Handle this case (redirect or return null)
+  return null; 
+}
   // Fetch user's avatar settings
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },

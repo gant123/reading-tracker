@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+
 }
 
 enum Role {
@@ -52,7 +52,8 @@ model User {
 
   achievements      UserAchievement[]
   rewards           UserReward[]
-  
+  quizAttempts      QuizAttempt[]
+  notifications    Notification[]
   // --- New Relation ---
   avatarItems       UserAvatarItem[]
   // --------------------
@@ -114,7 +115,7 @@ model Book {
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   sessions      ReadingSession[]
-
+  quizAttempts  QuizAttempt[]
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
@@ -207,4 +208,40 @@ model UserReward {
 
   @@index([userId])
   @@index([status])
+}
+
+model QuizAttempt {
+  id             String    @id @default(cuid())
+  userId         String    // The child who took the quiz
+  bookId         String    // The book the quiz was about
+  score          Int       // Number of correct answers (0-3)
+  totalQuestions Int       @default(3) // Total questions in quiz
+  passed         Boolean   // true if perfect score (3/3)
+  pointsEarned   Int       @default(0) // 50 if passed, 0 if failed
+  attemptedAt    DateTime  @default(now())
+  canRetryAt     DateTime? // null if passed (locked forever), timestamp if failed
+
+  // Relations
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book           Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([bookId])
+  @@index([userId, bookId]) // For quick lookup of user's quiz status on a book
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  userId      String   // The user who receives the notification (parent)
+  type        String   // 'QUIZ_PASSED', 'QUIZ_FAILED', 'BOOK_APPROVED', etc.
+  title       String
+  message     String
+  read        Boolean  @default(false)
+  data        Json?    // Optional extra data (childId, bookId, score, etc.)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, read]) // For fetching unread notifications
 }
