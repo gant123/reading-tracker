@@ -106,7 +106,7 @@ export default function RegisterPage() {
                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto">
                   <Image
                     src="/logo.png"
-                    alt="Reading Tracker Logo"
+                    alt="BookHoot Logo"
                     fill
                     className="object-contain drop-shadow-lg"
                     priority

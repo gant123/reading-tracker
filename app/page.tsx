@@ -16,14 +16,14 @@ export default function HomePage() {
               <div className="relative w-10 h-10 sm:w-12 sm:h-12">
                 <Image 
                   src="/logo.png" 
-                  alt="Reading Tracker Logo" 
+                  alt="BookHoot Logo" 
                   fill
                   className="object-contain"
                   priority
                 />
               </div>
               <span className="font-extrabold text-lg sm:text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Reading Tracker
+                BookHoot
               </span>
             </Link>
             <div className="flex items-center gap-2 sm:gap-4">
@@ -62,7 +62,7 @@ export default function HomePage() {
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32">
                   <Image 
                     src="/logo.png" 
-                    alt="Reading Tracker" 
+                    alt="BookHoot" 
                     fill
                     className="object-contain drop-shadow-2xl"
                     priority
@@ -396,7 +396,7 @@ export default function HomePage() {
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24">
                   <Image 
                     src="/logo.png" 
-                    alt="Reading Tracker" 
+                    alt="BookHoot" 
                     fill
                     className="object-contain"
                   />
@@ -429,15 +429,15 @@ export default function HomePage() {
               <div className="relative w-10 h-10">
                 <Image 
                   src="/logo.png" 
-                  alt="Reading Tracker" 
+                  alt="BookHoot" 
                   fill
                   className="object-contain"
                 />
               </div>
-              <span className="font-bold text-lg">Reading Tracker</span>
+              <span className="font-bold text-lg">BookHoot</span>
             </div>
             <p className="text-gray-400 text-sm text-center sm:text-left">
-              © {new Date().getFullYear()} Reading Tracker. Built with Love.
+              © {new Date().getFullYear()} BookHoot. Built with Love.
             </p>
             <div className="flex items-center gap-6">
               <Link href="/login" className="text-gray-400 hover:text-white transition-colors text-sm">

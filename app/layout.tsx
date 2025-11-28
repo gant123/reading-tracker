@@ -7,7 +7,7 @@ import Providers from './providers'; //
 const outfit = Outfit({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Reading Tracker & Rewards',
+  title: 'BookHoot & Rewards',
   description: 'Track reading progress, earn rewards, and build healthy reading habits',
   icons: {
     icon: '/logo.png', // Uses your new logo as the browser tab icon too!

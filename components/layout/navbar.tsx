@@ -33,7 +33,7 @@ export function Navbar({
             <div className="relative w-10 h-10 sm:w-12 sm:h-12 transition-transform group-hover:scale-105">
               <Image 
                 src="/logo.png" 
-                alt="Reading Tracker Logo" 
+                alt="BookHoot Logo" 
                 fill
                 className="object-contain"
                 priority
@@ -41,7 +41,7 @@ export function Navbar({
             </div>
             <div className="hidden sm:block">
               <span className="font-extrabold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Reading Tracker
+                BookHoot
               </span>
               {role && (
                 <span className={`block text-[10px] font-semibold uppercase tracking-wider ${

@@ -1,6 +1,25 @@
-import { PrismaClient } from '../app/generated/prisma/client';
+import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+
+// Global augmentation to prevent multiple instances in development
+const globalForPrisma = global as unknown as { 
+  prisma: PrismaClient;
+  pool: Pool;
+};
+
+// 1. Create or reuse the Postgres Pool
+const pool = globalForPrisma.pool || new Pool({ 
+  connectionString,
+  max: 10, // Limit connections per pool
+  idleTimeoutMillis: 30000 
+});
+
+// 2. Create the Adapter
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({adapter});
 
 async function main() {
   console.log('🌱 Seeding Achievements...');

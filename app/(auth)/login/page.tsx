@@ -78,7 +78,7 @@ export default function LoginPage() {
                 <div className="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto">
                   <Image
                     src="/logo.png"
-                    alt="Reading Tracker Logo"
+                    alt="BookHoot Logo"
                     fill
                     className="object-contain drop-shadow-lg"
                     priority
@@ -181,7 +181,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-200"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">New to Reading Tracker?</span>
+                <span className="px-4 bg-white text-gray-500">New to BookHoot?</span>
               </div>
             </div>
 
