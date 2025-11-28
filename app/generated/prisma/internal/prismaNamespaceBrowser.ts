@@ -61,7 +61,9 @@ export const ModelName = {
   Reward: 'Reward',
   UserReward: 'UserReward',
   QuizAttempt: 'QuizAttempt',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  DeviceToken: 'DeviceToken',
+  ActiveReadingSession: 'ActiveReadingSession'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -238,6 +240,27 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const DeviceTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  name: 'name',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type DeviceTokenScalarFieldEnum = (typeof DeviceTokenScalarFieldEnum)[keyof typeof DeviceTokenScalarFieldEnum]
+
+
+export const ActiveReadingSessionScalarFieldEnum = {
+  id: 'id',
+  startTime: 'startTime',
+  userId: 'userId',
+  bookId: 'bookId'
+} as const
+
+export type ActiveReadingSessionScalarFieldEnum = (typeof ActiveReadingSessionScalarFieldEnum)[keyof typeof ActiveReadingSessionScalarFieldEnum]
 
 
 export const SortOrder = {

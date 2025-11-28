@@ -44,9 +44,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = bookSchema.parse(body);
 
+    // Call the updated service which now handles the "check if exists" logic
     const book = await BookService.createBook(session.user.id, validatedData);
 
-    return NextResponse.json(book, { status: 201 });
+    // Return 200 (OK) because it might be an existing book. 
+    // If you strictly want 201 for new creations, you'd need the service to return a flag.
+    return NextResponse.json(book, { status: 200 }); 
   } catch (error: any) {
     console.error('Create book error:', error);
 

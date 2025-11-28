@@ -394,7 +394,9 @@ export const ModelName = {
   Reward: 'Reward',
   UserReward: 'UserReward',
   QuizAttempt: 'QuizAttempt',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  DeviceToken: 'DeviceToken',
+  ActiveReadingSession: 'ActiveReadingSession'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "avatarItem" | "userAvatarItem" | "book" | "readingSession" | "achievement" | "userAchievement" | "reward" | "userReward" | "quizAttempt" | "notification"
+    modelProps: "user" | "avatarItem" | "userAvatarItem" | "book" | "readingSession" | "achievement" | "userAchievement" | "reward" | "userReward" | "quizAttempt" | "notification" | "deviceToken" | "activeReadingSession"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1230,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DeviceToken: {
+      payload: Prisma.$DeviceTokenPayload<ExtArgs>
+      fields: Prisma.DeviceTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeviceTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeviceTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.DeviceTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeviceTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        findMany: {
+          args: Prisma.DeviceTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>[]
+        }
+        create: {
+          args: Prisma.DeviceTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        createMany: {
+          args: Prisma.DeviceTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeviceTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.DeviceTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        update: {
+          args: Prisma.DeviceTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeviceTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeviceTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeviceTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeviceTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeviceTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.DeviceTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeviceToken>
+        }
+        groupBy: {
+          args: Prisma.DeviceTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeviceTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeviceTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeviceTokenCountAggregateOutputType> | number
+        }
+      }
+    }
+    ActiveReadingSession: {
+      payload: Prisma.$ActiveReadingSessionPayload<ExtArgs>
+      fields: Prisma.ActiveReadingSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ActiveReadingSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ActiveReadingSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.ActiveReadingSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ActiveReadingSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        findMany: {
+          args: Prisma.ActiveReadingSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>[]
+        }
+        create: {
+          args: Prisma.ActiveReadingSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        createMany: {
+          args: Prisma.ActiveReadingSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ActiveReadingSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.ActiveReadingSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        update: {
+          args: Prisma.ActiveReadingSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ActiveReadingSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ActiveReadingSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ActiveReadingSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ActiveReadingSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ActiveReadingSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.ActiveReadingSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateActiveReadingSession>
+        }
+        groupBy: {
+          args: Prisma.ActiveReadingSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActiveReadingSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ActiveReadingSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ActiveReadingSessionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1425,6 +1575,27 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const DeviceTokenScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  name: 'name',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type DeviceTokenScalarFieldEnum = (typeof DeviceTokenScalarFieldEnum)[keyof typeof DeviceTokenScalarFieldEnum]
+
+
+export const ActiveReadingSessionScalarFieldEnum = {
+  id: 'id',
+  startTime: 'startTime',
+  userId: 'userId',
+  bookId: 'bookId'
+} as const
+
+export type ActiveReadingSessionScalarFieldEnum = (typeof ActiveReadingSessionScalarFieldEnum)[keyof typeof ActiveReadingSessionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1682,6 +1853,8 @@ export type GlobalOmitConfig = {
   userReward?: Prisma.UserRewardOmit
   quizAttempt?: Prisma.QuizAttemptOmit
   notification?: Prisma.NotificationOmit
+  deviceToken?: Prisma.DeviceTokenOmit
+  activeReadingSession?: Prisma.ActiveReadingSessionOmit
 }
 
 /* Types for Logging */

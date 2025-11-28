@@ -308,8 +308,10 @@ export type UserWhereInput = {
   lastReadDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  deviceTokens?: Prisma.DeviceTokenListRelationFilter
   parent?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   children?: Prisma.UserListRelationFilter
+  activeSession?: Prisma.XOR<Prisma.ActiveReadingSessionNullableScalarRelationFilter, Prisma.ActiveReadingSessionWhereInput> | null
   books?: Prisma.BookListRelationFilter
   sessions?: Prisma.ReadingSessionListRelationFilter
   achievements?: Prisma.UserAchievementListRelationFilter
@@ -336,8 +338,10 @@ export type UserOrderByWithRelationInput = {
   lastReadDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deviceTokens?: Prisma.DeviceTokenOrderByRelationAggregateInput
   parent?: Prisma.UserOrderByWithRelationInput
   children?: Prisma.UserOrderByRelationAggregateInput
+  activeSession?: Prisma.ActiveReadingSessionOrderByWithRelationInput
   books?: Prisma.BookOrderByRelationAggregateInput
   sessions?: Prisma.ReadingSessionOrderByRelationAggregateInput
   achievements?: Prisma.UserAchievementOrderByRelationAggregateInput
@@ -367,8 +371,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastReadDate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  deviceTokens?: Prisma.DeviceTokenListRelationFilter
   parent?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   children?: Prisma.UserListRelationFilter
+  activeSession?: Prisma.XOR<Prisma.ActiveReadingSessionNullableScalarRelationFilter, Prisma.ActiveReadingSessionWhereInput> | null
   books?: Prisma.BookListRelationFilter
   sessions?: Prisma.ReadingSessionListRelationFilter
   achievements?: Prisma.UserAchievementListRelationFilter
@@ -440,8 +446,10 @@ export type UserCreateInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -468,7 +476,9 @@ export type UserUncheckedCreateInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -494,8 +504,10 @@ export type UserUpdateInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -522,7 +534,9 @@ export type UserUncheckedUpdateInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -876,6 +890,34 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutDeviceTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDeviceTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDeviceTokensInput
+  upsert?: Prisma.UserUpsertWithoutDeviceTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeviceTokensInput, Prisma.UserUpdateWithoutDeviceTokensInput>, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+}
+
+export type UserCreateNestedOneWithoutActiveSessionInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActiveSessionInput, Prisma.UserUncheckedCreateWithoutActiveSessionInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActiveSessionInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutActiveSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutActiveSessionInput, Prisma.UserUncheckedCreateWithoutActiveSessionInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutActiveSessionInput
+  upsert?: Prisma.UserUpsertWithoutActiveSessionInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActiveSessionInput, Prisma.UserUpdateWithoutActiveSessionInput>, Prisma.UserUncheckedUpdateWithoutActiveSessionInput>
+}
+
 export type UserCreateWithoutChildrenInput = {
   id?: string
   email: string
@@ -892,7 +934,9 @@ export type UserCreateWithoutChildrenInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -919,6 +963,8 @@ export type UserUncheckedCreateWithoutChildrenInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -949,7 +995,9 @@ export type UserCreateWithoutParentInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -975,7 +1023,9 @@ export type UserUncheckedCreateWithoutParentInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -1022,7 +1072,9 @@ export type UserUpdateWithoutChildrenInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1049,6 +1101,8 @@ export type UserUncheckedUpdateWithoutChildrenInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -1112,8 +1166,10 @@ export type UserCreateWithoutAvatarItemsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -1139,7 +1195,9 @@ export type UserUncheckedCreateWithoutAvatarItemsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -1180,8 +1238,10 @@ export type UserUpdateWithoutAvatarItemsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1207,7 +1267,9 @@ export type UserUncheckedUpdateWithoutAvatarItemsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -1232,8 +1294,10 @@ export type UserCreateWithoutBooksInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
@@ -1259,7 +1323,9 @@ export type UserUncheckedCreateWithoutBooksInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
@@ -1300,8 +1366,10 @@ export type UserUpdateWithoutBooksInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
@@ -1327,7 +1395,9 @@ export type UserUncheckedUpdateWithoutBooksInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
@@ -1352,8 +1422,10 @@ export type UserCreateWithoutSessionsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
@@ -1379,7 +1451,9 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
@@ -1420,8 +1494,10 @@ export type UserUpdateWithoutSessionsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
@@ -1447,7 +1523,9 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
@@ -1472,8 +1550,10 @@ export type UserCreateWithoutAchievementsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
@@ -1499,7 +1579,9 @@ export type UserUncheckedCreateWithoutAchievementsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
@@ -1540,8 +1622,10 @@ export type UserUpdateWithoutAchievementsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
@@ -1567,7 +1651,9 @@ export type UserUncheckedUpdateWithoutAchievementsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
@@ -1592,8 +1678,10 @@ export type UserCreateWithoutRewardsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -1619,7 +1707,9 @@ export type UserUncheckedCreateWithoutRewardsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -1660,8 +1750,10 @@ export type UserUpdateWithoutRewardsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1687,7 +1779,9 @@ export type UserUncheckedUpdateWithoutRewardsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -1712,8 +1806,10 @@ export type UserCreateWithoutQuizAttemptsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -1739,7 +1835,9 @@ export type UserUncheckedCreateWithoutQuizAttemptsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -1780,8 +1878,10 @@ export type UserUpdateWithoutQuizAttemptsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1807,7 +1907,9 @@ export type UserUncheckedUpdateWithoutQuizAttemptsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -1832,8 +1934,10 @@ export type UserCreateWithoutNotificationsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
   parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
   children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
   books?: Prisma.BookCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
@@ -1859,7 +1963,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   lastReadDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
   children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
   books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
   achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
@@ -1900,8 +2006,10 @@ export type UserUpdateWithoutNotificationsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1927,12 +2035,270 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
+  children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDeviceTokensInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
+  children?: Prisma.UserCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionCreateNestedOneWithoutUserInput
+  books?: Prisma.BookCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDeviceTokensInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  parentId?: string | null
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedCreateNestedOneWithoutUserInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDeviceTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+}
+
+export type UserUpsertWithoutDeviceTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDeviceTokensInput, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDeviceTokensInput, Prisma.UserUncheckedCreateWithoutDeviceTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDeviceTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDeviceTokensInput, Prisma.UserUncheckedUpdateWithoutDeviceTokensInput>
+}
+
+export type UserUpdateWithoutDeviceTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
+  books?: Prisma.BookUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDeviceTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
+  books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutActiveSessionInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenCreateNestedManyWithoutUserInput
+  parent?: Prisma.UserCreateNestedOneWithoutChildrenInput
+  children?: Prisma.UserCreateNestedManyWithoutParentInput
+  books?: Prisma.BookCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutActiveSessionInput = {
+  id?: string
+  email: string
+  password: string
+  name: string
+  role: $Enums.Role
+  avatarColor?: string
+  avatarStyle?: string
+  avatarSeed?: string | null
+  avatarAccessories?: Prisma.UserCreateavatarAccessoriesInput | string[]
+  parentId?: string | null
+  points?: number
+  totalMinutes?: number
+  streakDays?: number
+  lastReadDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedCreateNestedManyWithoutUserInput
+  children?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  books?: Prisma.BookUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.ReadingSessionUncheckedCreateNestedManyWithoutUserInput
+  achievements?: Prisma.UserAchievementUncheckedCreateNestedManyWithoutUserInput
+  rewards?: Prisma.UserRewardUncheckedCreateNestedManyWithoutUserInput
+  quizAttempts?: Prisma.QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  avatarItems?: Prisma.UserAvatarItemUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutActiveSessionInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutActiveSessionInput, Prisma.UserUncheckedCreateWithoutActiveSessionInput>
+}
+
+export type UserUpsertWithoutActiveSessionInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutActiveSessionInput, Prisma.UserUncheckedUpdateWithoutActiveSessionInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutActiveSessionInput, Prisma.UserUncheckedCreateWithoutActiveSessionInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutActiveSessionInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutActiveSessionInput, Prisma.UserUncheckedUpdateWithoutActiveSessionInput>
+}
+
+export type UserUpdateWithoutActiveSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
+  parent?: Prisma.UserUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  books?: Prisma.BookUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
+  achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
+  rewards?: Prisma.UserRewardUpdateManyWithoutUserNestedInput
+  quizAttempts?: Prisma.QuizAttemptUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  avatarItems?: Prisma.UserAvatarItemUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutActiveSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  avatarColor?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarStyle?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarSeed?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatarAccessories?: Prisma.UserUpdateavatarAccessoriesInput | string[]
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
+  totalMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  streakDays?: Prisma.IntFieldUpdateOperationsInput | number
+  lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
   rewards?: Prisma.UserRewardUncheckedUpdateManyWithoutUserNestedInput
   quizAttempts?: Prisma.QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   avatarItems?: Prisma.UserAvatarItemUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1970,7 +2336,9 @@ export type UserUpdateWithoutParentInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUpdateManyWithoutUserNestedInput
@@ -1996,7 +2364,9 @@ export type UserUncheckedUpdateWithoutParentInput = {
   lastReadDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deviceTokens?: Prisma.DeviceTokenUncheckedUpdateManyWithoutUserNestedInput
   children?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  activeSession?: Prisma.ActiveReadingSessionUncheckedUpdateOneWithoutUserNestedInput
   books?: Prisma.BookUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.ReadingSessionUncheckedUpdateManyWithoutUserNestedInput
   achievements?: Prisma.UserAchievementUncheckedUpdateManyWithoutUserNestedInput
@@ -2030,6 +2400,7 @@ export type UserUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type UserCountOutputType = {
+  deviceTokens: number
   children: number
   books: number
   sessions: number
@@ -2041,6 +2412,7 @@ export type UserCountOutputType = {
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  deviceTokens?: boolean | UserCountOutputTypeCountDeviceTokensArgs
   children?: boolean | UserCountOutputTypeCountChildrenArgs
   books?: boolean | UserCountOutputTypeCountBooksArgs
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
@@ -2059,6 +2431,13 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDeviceTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeviceTokenWhereInput
 }
 
 /**
@@ -2135,8 +2514,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastReadDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deviceTokens?: boolean | Prisma.User$deviceTokensArgs<ExtArgs>
   parent?: boolean | Prisma.User$parentArgs<ExtArgs>
   children?: boolean | Prisma.User$childrenArgs<ExtArgs>
+  activeSession?: boolean | Prisma.User$activeSessionArgs<ExtArgs>
   books?: boolean | Prisma.User$booksArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
@@ -2208,8 +2589,10 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "avatarColor" | "avatarStyle" | "avatarSeed" | "avatarAccessories" | "parentId" | "points" | "totalMinutes" | "streakDays" | "lastReadDate" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  deviceTokens?: boolean | Prisma.User$deviceTokensArgs<ExtArgs>
   parent?: boolean | Prisma.User$parentArgs<ExtArgs>
   children?: boolean | Prisma.User$childrenArgs<ExtArgs>
+  activeSession?: boolean | Prisma.User$activeSessionArgs<ExtArgs>
   books?: boolean | Prisma.User$booksArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   achievements?: boolean | Prisma.User$achievementsArgs<ExtArgs>
@@ -2229,8 +2612,10 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    deviceTokens: Prisma.$DeviceTokenPayload<ExtArgs>[]
     parent: Prisma.$UserPayload<ExtArgs> | null
     children: Prisma.$UserPayload<ExtArgs>[]
+    activeSession: Prisma.$ActiveReadingSessionPayload<ExtArgs> | null
     books: Prisma.$BookPayload<ExtArgs>[]
     sessions: Prisma.$ReadingSessionPayload<ExtArgs>[]
     achievements: Prisma.$UserAchievementPayload<ExtArgs>[]
@@ -2650,8 +3035,10 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  deviceTokens<T extends Prisma.User$deviceTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deviceTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeviceTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parent<T extends Prisma.User$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$parentArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.User$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  activeSession<T extends Prisma.User$activeSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activeSessionArgs<ExtArgs>>): Prisma.Prisma__ActiveReadingSessionClient<runtime.Types.Result.GetResult<Prisma.$ActiveReadingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   books<T extends Prisma.User$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReadingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   achievements<T extends Prisma.User$achievementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$achievementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAchievementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3100,6 +3487,30 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.deviceTokens
+ */
+export type User$deviceTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeviceToken
+   */
+  select?: Prisma.DeviceTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeviceToken
+   */
+  omit?: Prisma.DeviceTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeviceTokenInclude<ExtArgs> | null
+  where?: Prisma.DeviceTokenWhereInput
+  orderBy?: Prisma.DeviceTokenOrderByWithRelationInput | Prisma.DeviceTokenOrderByWithRelationInput[]
+  cursor?: Prisma.DeviceTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeviceTokenScalarFieldEnum | Prisma.DeviceTokenScalarFieldEnum[]
+}
+
+/**
  * User.parent
  */
 export type User$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3140,6 +3551,25 @@ export type User$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * User.activeSession
+ */
+export type User$activeSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ActiveReadingSession
+   */
+  select?: Prisma.ActiveReadingSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ActiveReadingSession
+   */
+  omit?: Prisma.ActiveReadingSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ActiveReadingSessionInclude<ExtArgs> | null
+  where?: Prisma.ActiveReadingSessionWhereInput
 }
 
 /**

@@ -24,6 +24,22 @@ export class BookService {
   }
 
   static async createBook(userId: string, data: BookInput) {
+    // 1. If we have a Google ID, check if this specific child already has the book
+    if (data.googleBooksId) {
+      const existingBook = await prisma.book.findFirst({
+        where: {
+          userId, // Scoped to this specific child
+          googleBooksId: data.googleBooksId,
+        },
+      });
+
+      // 2. If it exists, return it immediately (idempotent action)
+      if (existingBook) {
+        return existingBook;
+      }
+    }
+
+    // 3. If it doesn't exist (or no Google ID provided), create it
     return prisma.book.create({
       data: {
         ...data,

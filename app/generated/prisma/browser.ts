@@ -72,3 +72,13 @@ export type QuizAttempt = Prisma.QuizAttemptModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model DeviceToken
+ * 
+ */
+export type DeviceToken = Prisma.DeviceTokenModel
+/**
+ * Model ActiveReadingSession
+ * 
+ */
+export type ActiveReadingSession = Prisma.ActiveReadingSessionModel
